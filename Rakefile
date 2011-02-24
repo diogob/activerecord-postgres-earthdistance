@@ -5,12 +5,12 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "activerecord-postgres-earthdistance"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{Now you can filter records within a radius}
+    gem.description = %Q{I'll write it tomorrow}
     gem.email = "juanmaiz@gmail.com"
     gem.homepage = "http://github.com/softa/activerecord-postgres-earthdistance"
     gem.authors = ["Juan Maiz"]
-    gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
+    # gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
