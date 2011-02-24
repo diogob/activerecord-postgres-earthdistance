@@ -1,4 +1,4 @@
-class SetupEarthDistance < ActiveRecord::Migration
+class SetupEarthdistance < ActiveRecord::Migration
   def self.up
     sql = <<-EARTHDISTANCE_SQL
 /* $PostgreSQL: pgsql/contrib/cube/cube.sql.in,v 1.25 2009/06/11 18:30:03 tgl Exp $ */

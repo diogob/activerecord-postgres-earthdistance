@@ -6,7 +6,7 @@ module ActiveRecord
 
     # Searches for record within a radius
     def self.within_radius radius, lat, lng
-      where(["ll_to_earth(latitude, longitude) <@ earth_box(ll_to_earth(?, ?), ?)", lat, lng, radius])
+      where(["ll_to_earth(lat, lng) <@ earth_box(ll_to_earth(?, ?), ?)", lat, lng, radius])
     end
 
   end
