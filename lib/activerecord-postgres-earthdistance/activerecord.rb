@@ -1,14 +1,15 @@
-# Extends AR to add Hstore functionality.
+# Extends AR to add earthdistance functionality.
 module ActiveRecord
-
-  # Adds methods for deleting keys in your hstore columns
   class Base
+    def self.acts_as_geolocated(options = {}, distances = {})
+      @@latitude_column = options[:lat]
+      @@longitude_column = options[:lng]
+      @@latitude_column = (column_names.include?("lat") ? "lat" : "latitude") unless @@latitude_column
+      @@longitude_column = (column_names.include?("lng") ? "lng" : "longitude") unless @@longitude_column
 
-    # Searches for record within a radius
-    def self.within_radius radius, lat, lng
-      where(["ll_to_earth(lat, lng) <@ earth_box(ll_to_earth(?, ?), ?)", lat, lng, radius])
+      def self.within_radius radius, lat, lng, unit = :meters
+        where(["ll_to_earth(#{@@latitude_column}, #{@@longitude_column}) <@ earth_box(ll_to_earth(?, ?), ?)", radius, lat, lng])
+      end
     end
-
   end
-
 end
