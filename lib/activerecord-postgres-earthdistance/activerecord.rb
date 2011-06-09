@@ -10,7 +10,7 @@ module ActiveRecord
       def self.within_radius radius, lat, lng, unit = :meters
         where(["ll_to_earth(#{@@latitude_column}, #{@@longitude_column}) <@ earth_box(ll_to_earth(?, ?), ?)
                AND earth_distance(ll_to_earth(#{@@latitude_column}, #{@@longitude_column}), ll_to_earth(?, ?)) <= ?", 
-               radius, lat, lng, radius, lat, lng])
+               lat, lng, radius, lat, lng, radius])
       end
     end
   end
