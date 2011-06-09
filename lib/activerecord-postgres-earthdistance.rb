@@ -10,19 +10,19 @@ require 'rails/generators/migration'
 # * Add earthdistance:setup generator 
 class EarthDistance < Rails::Railtie
 
-  initializer 'activerecord-postgres-hstore' do
+  initializer 'activerecord-postgres-earthdistance' do
     ActiveSupport.on_load :active_record do
       require "activerecord-postgres-earthdistance/activerecord"
     end
   end
 
-  # Creates the hstore:setup generator. This generator creates a migration that
-  # adds hstore support for your database. If fact, it's just the sql from the
+  # Creates the earthdistance:setup generator. This generator creates a migration that
+  # adds earthdistance support for your database. If fact, it's just the sql from the
   # contrib inside a migration. But it' s handy, isn't it?
   #
   # To use your generator, simply run it in your project:
   #
-  #   rails g hstore:setup
+  #   rails g earthdistance:setup
   class Setup < Rails::Generators::Base
     include Rails::Generators::Migration
 
@@ -44,5 +44,5 @@ class EarthDistance < Rails::Railtie
 
   end
 end
-# require "activerecord-postgres-hstore/string"
-# require "activerecord-postgres-hstore/hash"
+# require "activerecord-postgres-earthdistance/string"
+# require "activerecord-postgres-earthdistance/hash"
