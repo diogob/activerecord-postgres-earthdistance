@@ -14,12 +14,15 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   gem.name = "activerecord-postgres-earthdistance"
-  gem.homepage = "http://github.com/diogob/activerecord-postgres-earthdistance"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.name = "activerecord-postgres-earthdistance"
+  gem.summary = %Q{Now you can filter records within a radius}
+  gem.description = %Q{I'll write it tomorrow}
   gem.email = "diogob@gmail.com"
-  gem.authors = ["Diogo Biazus"]
+  gem.homepage = "http://github.com/softa/activerecord-postgres-earthdistance"
+  gem.authors = ["Juan Maiz", "Diogo Biazus"]
+  gem.add_dependency "pg"
+  gem.add_dependency "rails"
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
