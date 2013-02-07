@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>activerecord-postgres-earthdistance by diogob</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>activerecord-postgres-earthdistance</h1>
+        <p>Search records with latitude and longitude within a radius</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/diogob/activerecord-postgres-earthdistance" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/diogob/activerecord-postgres-earthdistance/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/diogob/activerecord-postgres-earthdistance/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>ActiveRecord + PostgreSQL Earthdistance <a href="http://travis-ci.org/softa/activerecord-postgres-earthdistance"><img src="https://secure.travis-ci.org/softa/activerecord-postgres-earthdistance.png?branch=master" alt="Build Status"></a>
+</h1>
+
+<p>Check distances with latitude and longitude using PostgreSQL special indexes.
+This gem enables your model to query the database using the earthdistance extension. This should be much faster than using trigonometry functions over standart indexs.</p>
+
+<h2>Requirements</h2>
+
+<p>Postgresql 9.1+ with contrib and Rails 3.1+
+On Ubuntu, this is easy: <code>sudo apt-get install postgresql-contrib-9.1</code></p>
+
+<p>On Mac you have a couple of options:</p>
+
+<ul>
+<li><a href="http://www.enterprisedb.com/products-services-training/pgdownload#osx">the binary package kindly provided by EnterpriseDB</a></li>
+<li>
+<a href="https://github.com/mxcl/homebrew">Homebrew’s</a> Postgres installation also includes the contrib packages: <code>brew install postgres</code>
+</li>
+<li><a href="http://postgresapp.com/">Postgres.app</a></li>
+</ul><h2>Install</h2>
+
+<p>Earthdistance is a PostgreSQL contrib module, <a href="http://www.postgresql.org/docs/9.2/static/earthdistance.html">check it out first</a>.</p>
+
+<p>Then, just add this to your Gemfile:</p>
+
+<p><code>gem 'activerecord-postgres-earthdistance'</code></p>
+
+<p>And run your bundler:</p>
+
+<p><code>bundle install</code></p>
+
+<p>Now you need to create a migration that adds earthdistance support for your
+PostgreSQL database:</p>
+
+<p><code>rails g earthdistance:setup</code></p>
+
+<p>Run it:</p>
+
+<p><code>rake db:migrate</code></p>
+
+<p>Now let's add some gist indexes to make queries ultra-fast.
+For the model Place we could create an index over the lat and lng fields:</p>
+
+<p><code>rails g migration add_index_to_places</code></p>
+
+<p>Edit the created migration:</p>
+
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">AddIndexToPlaces</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
+  <span class="k">def</span> <span class="nf">change</span>
+    <span class="n">add_earthdistance_index</span> <span class="ss">:places</span>
+  <span class="k">end</span> 
+<span class="k">end</span>
+</pre></div>
+
+<p>This will create the index with a SQL like this:</p>
+
+<div class="highlight"><pre><span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">places_earthdistance_ix</span> <span class="k">ON</span> <span class="n">places</span> <span class="k">USING</span> <span class="n">GIST</span> <span class="p">(</span><span class="n">ll_to_earth</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">));</span>
+</pre></div>
+
+<h2>Usage</h2>
+
+<p>This gem only provides a custom serialization coder.
+If you want to use it just put in your Gemfile:</p>
+
+<pre><code>gem 'activerecord-postgres-earthdistance'
+</code></pre>
+
+<p>Now add a line (for each earthdistance column) on the model you have your earthdistance columns.
+Assuming a model called <strong>Person</strong>, with a <strong>data</strong> field on it, the
+code should look like:</p>
+
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Place</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="n">acts_as_geolocated</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>This way, you will automatically look for columns with names such as lat/latitude and lng/longitude.
+But you can use alternative names passing them as:</p>
+
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Place</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="n">acts_as_geolocated</span> <span class="n">lat</span><span class="p">:</span> <span class="s1">'latitude_column_name'</span><span class="p">,</span> <span class="n">lng</span><span class="p">:</span> <span class="s1">'longitude_column_name'</span>
+<span class="k">end</span>
+</pre></div>
+
+<h3>Querying the database</h3>
+
+<p>To query for all places within a given radius of 100 meters from the origin 30,50 just use:</p>
+
+<div class="highlight"><pre><span class="no">Place</span><span class="o">.</span><span class="n">within_radius</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">all</span>
+</pre></div>
+
+<h2>Test Database</h2>
+
+<p>To have earthdistance enabled when you load your database schema (as happens in rake db:test:prepare), you
+have two options.</p>
+
+<p>The first option is creating a template database with earthdistance installed and set the template option
+in database.yml to that database.</p>
+
+<p>The second option is to uncomment or add the following line in config/application.rb</p>
+
+<pre><code>config.active_record.schema_format = :sql
+</code></pre>
+
+<p>This will change your schema dumps from Ruby to SQL. If you're
+unsure about the implications of this change, we suggest reading this
+<a href="http://guides.rubyonrails.org/migrations.html#schema-dumping-and-you">Rails Guide</a>.</p>
+
+<h2>Help</h2>
+
+<p>You can use issues in github for that. Or else you can reach us at
+twitter: <a href="https://twitter.com/#!/dbiazus">@dbiazus</a> </p>
+
+<h2>Note on Patches/Pull Requests</h2>
+
+<ul>
+<li>Fork the project.</li>
+<li>Make your feature addition or bug fix.</li>
+<li>Add tests for it. This is important so I don’t break it in a future version unintentionally.</li>
+<li>Commit, do not mess with rakefile, version, or history.  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)</li>
+<li>Send me a pull request. Bonus points for topic branches.</li>
+</ul><h2>Copyright</h2>
+
+<p>Copyright © 2010 Diogo Biazus. See LICENSE for details.</p>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/diogob">diogob</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
