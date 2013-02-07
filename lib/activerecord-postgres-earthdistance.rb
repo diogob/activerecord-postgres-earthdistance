@@ -44,5 +44,3 @@ class EarthDistance < Rails::Railtie
 
   end
 end
-# require "activerecord-postgres-earthdistance/string"
-# require "activerecord-postgres-earthdistance/hash"
