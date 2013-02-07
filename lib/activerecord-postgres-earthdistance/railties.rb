@@ -9,13 +9,6 @@ require 'rails/generators/migration'
 # * Initialize ActiveRecord properly
 # * Add earthdistance:setup generator 
 class EarthDistance < Rails::Railtie
-
-  initializer 'activerecord-postgres-earthdistance' do
-    ActiveSupport.on_load :active_record do
-      require "activerecord-postgres-earthdistance/activerecord"
-    end
-  end
-
   # Creates the earthdistance:setup generator. This generator creates a migration that
   # adds earthdistance support for your database. If fact, it's just the sql from the
   # contrib inside a migration. But it' s handy, isn't it?
