@@ -1,4 +1,4 @@
-#ActiveRecord + PostgreSQL Earthdistance [![Build Status](https://travis-ci.org/diogob/activerecord-postgres-earthdistance.png?branch=master)](https://travis-ci.org/diogob/activerecord-postgres-earthdistance) 
+#ActiveRecord + PostgreSQL Earthdistance [![Build Status](https://travis-ci.org/diogob/activerecord-postgres-earthdistance.png?branch=master)](https://travis-ci.org/diogob/activerecord-postgres-earthdistance)
 
 Check distances with latitude and longitude using PostgreSQL special indexes.
 This gem enables your model to query the database using the earthdistance extension. This should be much faster than using trigonometry functions over standart indexs.
@@ -47,7 +47,7 @@ Edit the created migration:
 class AddIndexToPlaces < ActiveRecord::Migration
   def change
     add_earthdistance_index :places
-  end 
+  end
 end
 ```
 
@@ -89,6 +89,11 @@ To query for all places within a given radius of 100 meters from the origin 30,5
 Place.within_radius(500, 30, 50).all
 ```
 
+You can also order the records based on the distance from a point
+```ruby
+Place.within_radius(500, 30, 50).order_by_distance(20,30)
+```
+
 ##Test Database
 
 To have earthdistance enabled when you load your database schema (as happens in rake db:test:prepare), you
@@ -108,7 +113,7 @@ unsure about the implications of this change, we suggest reading this
 ##Help
 
 You can use issues in github for that. Or else you can reach us at
-twitter: [@dbiazus](https://twitter.com/#!/dbiazus) 
+twitter: [@dbiazus](https://twitter.com/#!/dbiazus)
 
 ##Note on Patches/Pull Requests
 

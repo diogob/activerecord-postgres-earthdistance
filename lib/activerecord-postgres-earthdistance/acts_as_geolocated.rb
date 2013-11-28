@@ -14,9 +14,14 @@ module ActiveRecordPostgresEarthdistance
 
       def within_radius radius, lat, lng
         where(["ll_to_earth(#{self.latitude_column}, #{self.longitude_column}) <@ earth_box(ll_to_earth(?, ?), ?)" +
-               "AND earth_distance(ll_to_earth(#{self.latitude_column}, #{self.longitude_column}), ll_to_earth(?, ?)) <= ?", 
+               "AND earth_distance(ll_to_earth(#{self.latitude_column}, #{self.longitude_column}), ll_to_earth(?, ?)) <= ?",
                lat, lng, radius, lat, lng, radius])
       end
+
+      def order_by_distance lat, lng, order: "ASC"
+        order("earth_distance(ll_to_earth(#{self.latitude_column}, #{self.longitude_column}), ll_to_earth(#{lat}, #{lng})) #{order}")
+      end
+
     end
   end
 end
