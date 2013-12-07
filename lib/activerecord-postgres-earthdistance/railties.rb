@@ -1,7 +1,7 @@
 require 'rails'
 require 'rails/generators'
 require 'rails/generators/migration'
-
+require 'active_record'
 # = Earth Distance Railtie
 #
 # Creates a new railtie for 2 reasons:
