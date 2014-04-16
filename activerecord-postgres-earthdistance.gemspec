@@ -4,7 +4,7 @@ $:.unshift lib unless $:.include?(lib)
 
 Gem::Specification.new do |s|
   s.name = "activerecord-postgres-earthdistance"
-  s.version = "0.3.1"
+  s.version = "0.3.2"
 
   s.platform    = Gem::Platform::RUBY
   s.license     = "MIT"
