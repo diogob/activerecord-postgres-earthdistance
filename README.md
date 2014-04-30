@@ -30,7 +30,7 @@ And run your bundler:
 Now you need to create a migration that adds earthdistance support for your
 PostgreSQL database:
 
-`rails g earthdistance:setup`
+`rails g earth_distance:setup`
 
 Run it:
 
