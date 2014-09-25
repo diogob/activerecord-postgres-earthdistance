@@ -84,14 +84,14 @@ end
 
 ###Querying the database
 
-To query for all places within a given radius of 100 meters from the origin 30,50 just use:
+To query for all places within a given radius of 100 meters from the origin -22.951916,-43.210487 just use:
 ```ruby
-Place.within_radius(100, 30, 50).all
+Place.within_radius(100, -22.951916, -43.210487).all
 ```
 
 You can also order the records based on the distance from a point
 ```ruby
-Place.within_radius(100, 30, 50).order_by_distance(20,30)
+Place.within_radius(100, -22.951916,-43.210487).order_by_distance(-22.951916,-43.210487)
 ```
 
 ##Test Database
