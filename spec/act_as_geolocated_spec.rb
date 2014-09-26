@@ -53,4 +53,25 @@ describe "ActiveRecord::Base.act_as_geolocated" do
       it{ should == [@place_2, @place_1] }
     end
   end
+
+  describe "#selecting_distance_from" do
+    let(:current_location){ {lat: nil, lng: nil, radius: nil} }
+    subject do
+      Place.
+        order_by_distance(current_location[:lat], current_location[:lng]).
+        selecting_distance_from(current_location[:lat], current_location[:lng]).
+        first.
+        try{|p| [p.data, p.distance.to_f] }
+    end
+    before(:all) do
+      @place = Place.create!(:data => 'Amsterdam', :lat => 52.370216, :lng => 4.895168) #Amsterdam
+    end
+    after(:all) do
+      @place.destroy
+    end
+    context "when selecting distance" do
+      let(:current_location){{lat: 52.229676, lng: 21.012229}} #Warsaw
+      it{ should == ["Amsterdam", 1095013.87438311] }
+    end
+  end
 end

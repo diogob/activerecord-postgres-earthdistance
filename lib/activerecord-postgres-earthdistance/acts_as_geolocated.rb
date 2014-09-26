@@ -23,9 +23,21 @@ module ActiveRecordPostgresEarthdistance
       def order_by_distance lat, lng, order= "ASC"
         order("earth_distance(ll_to_earth(#{self.latitude_column}, #{self.longitude_column}), ll_to_earth(#{lat}, #{lng})) #{order}")
       end
-
     end
   end
+
+  module QueryMethods
+    def selecting_distance_from lat, lng, name="distance", include_default_columns=true
+      clone.tap do |relation|
+        values = []
+        values << relation.arel_table[Arel.star] if relation.select_values.empty? && include_default_columns
+        values << "earth_distance(ll_to_earth(#{self.latitude_column}, #{self.longitude_column}), ll_to_earth(#{lat}, #{lng})) as #{name}"
+        relation.select_values = values
+      end
+    end
+  end
+
 end
 
 ActiveRecord::Base.send :include, ActiveRecordPostgresEarthdistance::ActsAsGeolocated
+ActiveRecord::Relation.send :include, ActiveRecordPostgresEarthdistance::QueryMethods
