@@ -94,6 +94,13 @@ You can also order the records based on the distance from a point
 Place.within_radius(100, -22.951916,-43.210487).order_by_distance(-22.951916,-43.210487)
 ```
 
+The `within_radius` query performs two checks: first against the *bounding box*, followed by computing the exact distance for
+all contained elements. The latter might be computationally expensive for big ranges.
+So if precision is not an issue but query speed is, you might want to query against the bounding box only:
+```ruby
+Place.within_box(1_000_000, -22.951916,-43.210487)
+```
+
 ##Test Database
 
 To have earthdistance enabled when you load your database schema (as happens in rake db:test:prepare), you

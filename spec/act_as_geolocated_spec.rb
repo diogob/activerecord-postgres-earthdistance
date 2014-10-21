@@ -1,6 +1,46 @@
 require 'spec_helper'
 
 describe "ActiveRecord::Base.act_as_geolocated" do
+  describe "#within_box" do
+    let(:test_data) { { lat: nil, lng: nil, radius: nil } }
+
+    subject { Place.within_box(test_data[:radius], test_data[:lat], test_data[:lng]) }
+
+    before(:all) { @place = Place.create!(:lat => -30.0277041, :lng => -51.2287346) }
+    after(:all) { @place.destroy }
+
+    context "when query with null data" do
+      it { should be_empty }
+    end
+
+    context "when query for the exact same point with radius 0" do
+      let(:test_data) { { lat: -30.0277041, lng: -51.2287346 , radius: 0 } }
+
+      it { should == [@place] }
+    end
+
+    context "when query for place within the box" do
+      let(:test_data) { { radius: 4000000, lat: -27.5969039, lng: -48.5494544 } }
+
+      it { should == [@place] }
+    end
+
+    context "when query for place within the box, but outside the radius" do
+      let(:test_data) { { radius: 300000, lat: -27.5969039, lng: -48.5494544 } }
+
+      it "the place shouldn't be within the radius" do
+        Place.within_radius(test_data[:radius], test_data[:lat], test_data[:lng]).should be_empty
+      end
+
+      it { should == [@place] }
+    end
+
+    context "when query for place outside the box" do
+      let(:test_data) { { radius: 1000, lat: -27.5969039, lng: -48.5494544 } }
+      it { should be_empty }
+    end
+  end
+
   describe "#within_radius" do
     let(:test_data){ {lat: nil, lng: nil, radius: nil} }
     subject{ Place.within_radius(test_data[:radius], test_data[:lat], test_data[:lng]) }
@@ -28,6 +68,7 @@ describe "ActiveRecord::Base.act_as_geolocated" do
 
     context "when query for place outside the radius" do
       let(:test_data){ {radius: 1000, lat: -27.5969039, lng: -48.5494544} }
+      it{ should == [] }
     end
   end
 
