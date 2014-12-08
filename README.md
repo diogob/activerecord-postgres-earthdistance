@@ -101,6 +101,13 @@ So if precision is not an issue but query speed is, you might want to query agai
 Place.within_box(1_000_000, -22.951916,-43.210487)
 ```
 
+Select the distance from a point:
+```ruby
+point = [-22.951916, -43.210487]
+closest = Place.within_radius(100, *point).order_by_distance(*point).selecting_distance_from(*point).first
+closest.distance
+```
+
 ##Test Database
 
 To have earthdistance enabled when you load your database schema (as happens in rake db:test:prepare), you
