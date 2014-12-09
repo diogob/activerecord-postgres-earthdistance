@@ -42,7 +42,7 @@ module ActiveRecordPostgresEarthdistance
       clone.tap do |relation|
         values = []
         values << relation.arel_table[Arel.star] if relation.select_values.empty? && include_default_columns
-        values << "earth_distance(ll_to_earth(#{self.quoted_table_name}.#{self.latitude_column}, #{self.quoted_table_name}.#{self.longitude_column}), ll_to_earth(#{lat}, #{lng})) as #{name}"
+        values << "earth_distance(ll_to_earth(#{self.latitude_column}, #{self.longitude_column}), ll_to_earth(#{lat}, #{lng})) as #{name}"
         relation.select_values = values
       end
     end
