@@ -43,7 +43,7 @@ RSpec.configure do |config|
 
     # Load models used in spec
     require 'fixtures/place'
-    require 'fixtures/events'
+    require 'fixtures/event'
   end
 
 end
