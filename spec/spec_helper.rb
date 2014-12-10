@@ -23,7 +23,9 @@ RSpec.configure do |config|
         CREATE EXTENSION IF NOT EXISTS cube;
         CREATE EXTENSION IF NOT EXISTS earthdistance;
         DROP TABLE IF EXISTS places;
+        DROP TABLE IF EXISTS events;
         CREATE TABLE places (id serial PRIMARY KEY, data text, lat float8, lng float8);
+        CREATE TABLE events (id serial PRIMARY KEY, event_id integer, place_id integer, data text, lat float8, lng float8);
 }
     rescue Exception => e
       puts "Exception: #{e}"
@@ -39,8 +41,9 @@ RSpec.configure do |config|
       retry
     end
 
-    # Load model used in spec
+    # Load models used in spec
     require 'fixtures/place'
+    require 'fixtures/events'
   end
 
 end

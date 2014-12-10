@@ -39,6 +39,21 @@ describe "ActiveRecord::Base.act_as_geolocated" do
       let(:test_data) { { radius: 1000, lat: -27.5969039, lng: -48.5494544 } }
       it { should be_empty }
     end
+
+    context "when joining tables that are also geoloacted" do
+      let(:test_data) { { radius: 1000, lat: -27.5969039, lng: -48.5494544 } }
+
+      subject { Place.within_box(test_data[:radius], test_data[:lat], test_data[:lng]) }
+
+      it "should work with objects having columns with the same name" do
+        expect { Place.joins(:events).within_radius(test_data[:radius], test_data[:lat], test_data[:lng]).to_a }.to_not raise_error
+
+      end
+
+      it "should work with nested associations" do
+        expect { Event.joins(:events).within_radius(test_data[:radius], test_data[:lat], test_data[:lng]).to_a }.to_not raise_error
+      end
+    end
   end
 
   describe "#within_radius" do
