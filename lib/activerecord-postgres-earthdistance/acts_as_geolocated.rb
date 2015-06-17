@@ -32,7 +32,11 @@ module ActiveRecordPostgresEarthdistance
       end
 
       def ll_to_earth_coords lat, lng
-        Arel::Nodes::NamedFunction.new('ll_to_earth', [lat, lng])
+        if Arel::Nodes.respond_to?(:build_quoted) # for arel >= 6.0.0
+          Arel::Nodes::NamedFunction.new('ll_to_earth', [Arel::Nodes.build_quoted(lat), Arel::Nodes.build_quoted(lng)])
+        else
+          Arel::Nodes::NamedFunction.new('ll_to_earth', [lat, lng])
+        end
       end
     end
   end
