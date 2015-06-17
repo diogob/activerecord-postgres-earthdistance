@@ -12,13 +12,13 @@ module ActiveRecordPostgresEarthdistance
       end
 
       def within_box(radius, lat, lng)
-        earth_box = Arel::Nodes::NamedFunction.new('earth_box', [ll_to_earth_coords(lat, lng), radius])
+        earth_box = Arel::Nodes::NamedFunction.new('earth_box', [ll_to_earth_coords(lat, lng), quote_value(radius)])
         where Arel::Nodes::InfixOperation.new('<@', ll_to_earth_columns, earth_box)
       end
 
       def within_radius(radius, lat, lng)
         earth_distance = Arel::Nodes::NamedFunction.new('earth_distance', [ll_to_earth_columns, ll_to_earth_coords(lat, lng)])
-        within_box(radius, lat, lng).where(Arel::Nodes::InfixOperation.new('<=', earth_distance, radius))
+        within_box(radius, lat, lng).where(Arel::Nodes::InfixOperation.new('<=', earth_distance, quote_value(radius)))
       end
 
       def order_by_distance(lat, lng, order = "ASC")
@@ -32,10 +32,14 @@ module ActiveRecordPostgresEarthdistance
       end
 
       def ll_to_earth_coords lat, lng
+        Arel::Nodes::NamedFunction.new('ll_to_earth', [quote_value(lat), quote_value(lng)])
+      end
+
+      def quote_value value
         if Arel::Nodes.respond_to?(:build_quoted) # for arel >= 6.0.0
-          Arel::Nodes::NamedFunction.new('ll_to_earth', [Arel::Nodes.build_quoted(lat), Arel::Nodes.build_quoted(lng)])
+          Arel::Nodes.build_quoted(value)
         else
-          Arel::Nodes::NamedFunction.new('ll_to_earth', [lat, lng])
+          value
         end
       end
     end
