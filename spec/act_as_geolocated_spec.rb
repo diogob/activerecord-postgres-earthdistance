@@ -1,6 +1,16 @@
 require 'spec_helper'
 
 describe "ActiveRecord::Base.act_as_geolocated" do
+  describe 'ActiveRecord::Base' do
+    context "when using .where with a model instance as a placeholder" do
+      let(:place) { Place.create! }
+      subject { Place.where('id = ?', place).first }
+      after { place.destroy! }
+
+      it { should == place }
+    end
+  end
+
   describe "#within_box" do
     let(:test_data) { { lat: nil, lng: nil, radius: nil } }
 
