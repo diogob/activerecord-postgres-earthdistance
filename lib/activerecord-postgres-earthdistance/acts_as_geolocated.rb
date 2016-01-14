@@ -4,11 +4,9 @@ module ActiveRecordPostgresEarthdistance
 
     module ClassMethods
       def acts_as_geolocated(options = {})
-        if table_exists?
-          cattr_accessor :latitude_column, :longitude_column
-          self.latitude_column = options[:lat] || (column_names.include?("lat") ? "lat" : "latitude")
-          self.longitude_column = options[:lng] || (column_names.include?("lng") ? "lng" : "longitude")
-        end
+        cattr_accessor :latitude_column, :longitude_column
+        self.latitude_column = options[:lat] || (column_names.include?("lat") ? "lat" : "latitude")
+        self.longitude_column = options[:lng] || (column_names.include?("lng") ? "lng" : "longitude")
       end
 
       def within_box(radius, lat, lng)
