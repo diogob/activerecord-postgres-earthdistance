@@ -1,4 +1,4 @@
-#ActiveRecord + PostgreSQL Earthdistance [![Build Status](https://travis-ci.org/diogob/activerecord-postgres-earthdistance.png?branch=master)](https://travis-ci.org/diogob/activerecord-postgres-earthdistance)
+#ActiveRecord + PostgreSQL Earthdistance [![Build Status](https://travis-ci.org/diogob/activerecord-postgres-earthdistance.svg?branch=master)](https://travis-ci.org/diogob/activerecord-postgres-earthdistance)
 
 Check distances with latitude and longitude using PostgreSQL special indexes.
 This gem enables your model to query the database using the earthdistance extension. This should be much faster than using trigonometry functions over standard indexes.
