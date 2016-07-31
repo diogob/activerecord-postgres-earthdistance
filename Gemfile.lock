@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    activerecord-postgres-earthdistance (0.4.3)
+    activerecord-postgres-earthdistance (0.4.4)
       activerecord (>= 3.1)
       pg
       rake
@@ -52,4 +52,4 @@ DEPENDENCIES
   rspec (~> 2.11)
 
 BUNDLED WITH
-   1.11.2
+   1.12.5
