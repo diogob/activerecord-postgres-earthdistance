@@ -27,7 +27,7 @@ module ActiveRecordPostgresEarthdistance
 
       private
       def through_table_klass
-        through_table_klass = through_table ? AccessPoint.reflections[through_table.to_s].klass : self
+        through_table ? self.reflections[through_table.to_s].klass : self
       end
     end
 
