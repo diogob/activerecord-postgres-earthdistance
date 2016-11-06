@@ -4,7 +4,7 @@ $LOAD_PATH.unshift lib unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |s|
   s.name = "activerecord-postgres-earthdistance"
-  s.version = "0.4.4"
+  s.version = "0.5.0"
 
   s.platform    = Gem::Platform::RUBY
   s.license     = "MIT"
@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "bundler"
   s.add_development_dependency "rdoc"
   s.add_development_dependency "rspec", "~> 2.11"
+  s.add_development_dependency "pry"
 
   git_files            = begin
                            `git ls-files`.split("\n")
