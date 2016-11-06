@@ -143,8 +143,8 @@ describe "ActiveRecord::Base.act_as_geolocated" do
     let(:current_location){ {lat: nil, lng: nil, radius: nil} }
     subject{ Place.order_by_distance(current_location[:lat], current_location[:lng]) }
     before(:all) do
-      @place1 = Place.create!(lat: 52.370216, lng: 4.895168) #Amsterdam
-      @place2 = Place.create!(lat: 52.520007, lng: 13.404954) #Berlin
+      @place1 = Place.create!(lat: 52.370216, lng: 4.895168) # Amsterdam
+      @place2 = Place.create!(lat: 52.520007, lng: 13.404954) # Berlin
     end
     after(:all) do
       @place1.destroy
@@ -152,12 +152,12 @@ describe "ActiveRecord::Base.act_as_geolocated" do
     end
 
     context "when sorting on distance" do
-      let(:current_location){{lat: 51.511214, lng: 0.119824}} #London
+      let(:current_location){{lat: 51.511214, lng: 0.119824}} # London
       it{ should == [@place1, @place2] }
     end
 
     context "when sorting on distance from another location" do
-      let(:current_location){{lat: 52.229676, lng: 21.012229}} #Warsaw
+      let(:current_location){{lat: 52.229676, lng: 21.012229}} # Warsaw
       it{ should == [@place2, @place1] }
     end
   end
@@ -172,13 +172,13 @@ describe "ActiveRecord::Base.act_as_geolocated" do
         .try{|p| [p.data, p.distance.to_f] }
     end
     before(:all) do
-      @place = Place.create!(data: 'Amsterdam', lat: 52.370216, lng: 4.895168) #Amsterdam
+      @place = Place.create!(data: 'Amsterdam', lat: 52.370216, lng: 4.895168) # Amsterdam
     end
     after(:all) do
       @place.destroy
     end
     context "when selecting distance" do
-      let(:current_location){{lat: 52.229676, lng: 21.012229}} #Warsaw
+      let(:current_location){{lat: 52.229676, lng: 21.012229}} # Warsaw
       it{ should == ["Amsterdam", 1095013.87438311] }
     end
   end

@@ -67,11 +67,11 @@ module ActiveRecordPostgresEarthdistance
         )
       end
 
-      def self.ll_to_earth_coords lat, lng
+      def self.ll_to_earth_coords(lat, lng)
         Arel::Nodes::NamedFunction.new('ll_to_earth', [quote_value(lat), quote_value(lng)])
       end
 
-      def self.quote_value value
+      def self.quote_value(value)
         if Arel::Nodes.respond_to?(:build_quoted) # for arel >= 6.0.0
           Arel::Nodes.build_quoted(value)
         else
@@ -82,7 +82,7 @@ module ActiveRecordPostgresEarthdistance
   end
 
   module QueryMethods
-    def selecting_distance_from lat, lng, name="distance", include_default_columns=true
+    def selecting_distance_from(lat, lng, name="distance", include_default_columns=true)
       clone.tap do |relation|
         values = []
         if relation.select_values.empty? && include_default_columns

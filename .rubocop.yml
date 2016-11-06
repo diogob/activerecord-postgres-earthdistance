@@ -38,22 +38,6 @@ Style/FileName:
   Exclude:
     - 'lib/activerecord-postgres-earthdistance.rb'
 
-
-# Offense count: 6
-# Cop supports --auto-correct.
-Style/LeadingCommentSpace:
-  Exclude:
-    - 'spec/act_as_geolocated_spec.rb'
-
-# Offense count: 5
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: require_parentheses, require_no_parentheses, require_no_parentheses_except_multiline
-Style/MethodDefParentheses:
-  Exclude:
-    - 'lib/activerecord-postgres-earthdistance/activerecord.rb'
-    - 'lib/activerecord-postgres-earthdistance/acts_as_geolocated.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
