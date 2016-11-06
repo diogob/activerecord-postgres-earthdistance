@@ -11,12 +11,12 @@ RSpec.configure do |config|
     # I do not use database users or password for the tests, using ident authentication instead
     begin
       ActiveRecord::Base.establish_connection(
-        :adapter  => "postgresql",
-        :host     => "localhost",
-        :username => "postgres",
-        :password => "postgres",
-        :port     => 5432,
-        :database => "ar_pg_earthdistance_test"
+        adapter: "postgresql",
+        host: "localhost",
+        username: "postgres",
+        password: "postgres",
+        port: 5432,
+        database: "ar_pg_earthdistance_test"
       )
       ActiveRecord::Base.connection.execute %{
         SET client_min_messages TO warning;
@@ -32,12 +32,12 @@ RSpec.configure do |config|
     rescue Exception => e
       puts "Exception: #{e}"
       ActiveRecord::Base.establish_connection(
-        :adapter  => "postgresql",
-        :host     => "localhost",
-        :username => "postgres",
-        :password => "postgres",
-        :port     => 5432,
-        :database => "postgres"
+        adapter: "postgresql",
+        host: "localhost",
+        username: "postgres",
+        password: "postgres",
+        port: 5432,
+        database: "postgres"
       )
       ActiveRecord::Base.connection.execute "CREATE DATABASE ar_pg_earthdistance_test"
       retry

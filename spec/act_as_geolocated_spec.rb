@@ -16,7 +16,7 @@ describe "ActiveRecord::Base.act_as_geolocated" do
 
     subject { Place.within_box(test_data[:radius], test_data[:lat], test_data[:lng]) }
 
-    before(:all) { @place = Place.create!(:lat => -30.0277041, :lng => -51.2287346) }
+    before(:all) { @place = Place.create!(lat: -30.0277041, lng: -51.2287346) }
     after(:all) { @place.destroy }
 
     context "when query with null data" do
@@ -70,7 +70,7 @@ describe "ActiveRecord::Base.act_as_geolocated" do
     let(:test_data){ {lat: nil, lng: nil, radius: nil} }
     subject{ Place.within_radius(test_data[:radius], test_data[:lat], test_data[:lng]) }
     before(:all) do
-      @place = Place.create!(:lat => -30.0277041, :lng => -51.2287346)
+      @place = Place.create!(lat: -30.0277041, lng: -51.2287346)
     end
 
     after(:all) do
@@ -101,7 +101,7 @@ describe "ActiveRecord::Base.act_as_geolocated" do
       subject{ Job.joins(:event).within_radius(test_data[:radius], test_data[:lat], test_data[:lng]) }
 
       before(:all) do
-        @event = Event.create!(:lat => -30.0277041, :lng => -51.2287346)
+        @event = Event.create!(lat: -30.0277041, lng: -51.2287346)
         @job = Job.create!(event: @event)
       end
 
@@ -135,8 +135,8 @@ describe "ActiveRecord::Base.act_as_geolocated" do
     let(:current_location){ {lat: nil, lng: nil, radius: nil} }
     subject{ Place.order_by_distance(current_location[:lat], current_location[:lng]) }
     before(:all) do
-      @place_1 = Place.create!(:lat => 52.370216, :lng => 4.895168) #Amsterdam
-      @place_2 = Place.create!(:lat => 52.520007, :lng => 13.404954) #Berlin
+      @place_1 = Place.create!(lat: 52.370216, lng: 4.895168) #Amsterdam
+      @place_2 = Place.create!(lat: 52.520007, lng: 13.404954) #Berlin
     end
     after(:all) do
       @place_1.destroy
@@ -164,7 +164,7 @@ describe "ActiveRecord::Base.act_as_geolocated" do
         try{|p| [p.data, p.distance.to_f] }
     end
     before(:all) do
-      @place = Place.create!(:data => 'Amsterdam', :lat => 52.370216, :lng => 4.895168) #Amsterdam
+      @place = Place.create!(data: 'Amsterdam', lat: 52.370216, lng: 4.895168) #Amsterdam
     end
     after(:all) do
       @place.destroy

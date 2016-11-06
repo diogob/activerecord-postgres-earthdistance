@@ -5,7 +5,7 @@ require 'rubygems'
 require 'rspec/core/rake_task'
 require 'rdoc/task'
 
-task :default => :spec
+task default: :spec
 
 begin
   Bundler.setup(:default, :development)

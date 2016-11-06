@@ -16,18 +16,36 @@ module ActiveRecordPostgresEarthdistance
       end
 
       def within_radius(radius, lat, lng)
-        earth_distance = Arel::Nodes::NamedFunction.new('earth_distance', [Utils.ll_to_earth_columns(through_table_klass), Utils.ll_to_earth_coords(lat, lng)])
-        within_box(radius, lat, lng).where(Arel::Nodes::InfixOperation.new('<=', earth_distance, Utils.quote_value(radius)))
+        earth_distance = Arel::Nodes::NamedFunction.new(
+          'earth_distance',
+          [
+            Utils.ll_to_earth_columns(through_table_klass),
+            Utils.ll_to_earth_coords(lat, lng)
+          ]
+        )
+        within_box(radius, lat, lng)
+          .where(Arel::Nodes::InfixOperation.new('<=', earth_distance, Utils.quote_value(radius)))
       end
 
       def order_by_distance(lat, lng, order = "ASC")
-        earth_distance = Arel::Nodes::NamedFunction.new('earth_distance', [Utils.ll_to_earth_columns(through_table_klass), Utils.ll_to_earth_coords(lat, lng)])
-        order("#{earth_distance.to_sql} #{order.to_s}")
+        earth_distance = Arel::Nodes::NamedFunction.new(
+          'earth_distance',
+          [
+            Utils.ll_to_earth_columns(through_table_klass),
+            Utils.ll_to_earth_coords(lat, lng)
+          ]
+        )
+        order("#{earth_distance.to_sql} #{order}")
       end
 
       private
+
       def through_table_klass
-        through_table ? self.reflections[through_table.to_s].klass : self
+        if through_table.present?
+          reflections[through_table.to_s].klass
+        else
+          self
+        end
       end
     end
 

@@ -12,7 +12,9 @@ Gem::Specification.new do |s|
   s.email       = "diogo@biazus.me"
   s.homepage    = "http://github.com/diogob/activerecord-postgres-earthdistance"
   s.summary     = "Check distances with latitude and longitude using PostgreSQL special indexes"
-  s.description = "This gem enables your model to query the database using the earthdistance extension. This should be much faster than using trigonometry functions over standart indexs."
+  s.description = "This gem enables your model to query the database using the earthdistance \
+                  extension. This should be much faster than using trigonometry functions over\
+                  standart indexs."
   s.required_ruby_version     = ">= 1.8.7"
   s.required_rubygems_version = ">= 1.3.6"
 
