@@ -47,35 +47,36 @@ module ActiveRecordPostgresEarthdistance
         end
       end
     end
+  end
 
-    module Utils
-      def self.earth_distance(through_table_klass, lat, lng)
-        Arel::Nodes::NamedFunction.new(
-          "earth_distance",
-          [
-            ll_to_earth_columns(through_table_klass),
-            ll_to_earth_coords(lat, lng)
-          ]
-        )
-      end
+  module Utils
+    def self.earth_distance(through_table_klass, lat, lng, aliaz = nil)
+      Arel::Nodes::NamedFunction.new(
+        "earth_distance",
+        [
+          ll_to_earth_columns(through_table_klass),
+          ll_to_earth_coords(lat, lng)
+        ],
+        aliaz
+      )
+    end
 
-      def self.ll_to_earth_columns(klass)
-        Arel::Nodes::NamedFunction.new(
-          "ll_to_earth",
-          [klass.arel_table[klass.latitude_column], klass.arel_table[klass.longitude_column]]
-        )
-      end
+    def self.ll_to_earth_columns(klass)
+      Arel::Nodes::NamedFunction.new(
+        "ll_to_earth",
+        [klass.arel_table[klass.latitude_column], klass.arel_table[klass.longitude_column]]
+      )
+    end
 
-      def self.ll_to_earth_coords(lat, lng)
-        Arel::Nodes::NamedFunction.new("ll_to_earth", [quote_value(lat), quote_value(lng)])
-      end
+    def self.ll_to_earth_coords(lat, lng)
+      Arel::Nodes::NamedFunction.new("ll_to_earth", [quote_value(lat), quote_value(lng)])
+    end
 
-      def self.quote_value(value)
-        if Arel::Nodes.respond_to?(:build_quoted) # for arel >= 6.0.0
-          Arel::Nodes.build_quoted(value)
-        else
-          value
-        end
+    def self.quote_value(value)
+      if Arel::Nodes.respond_to?(:build_quoted) # for arel >= 6.0.0
+        Arel::Nodes.build_quoted(value)
+      else
+        value
       end
     end
   end
@@ -87,8 +88,8 @@ module ActiveRecordPostgresEarthdistance
         if relation.select_values.empty? && include_default_columns
           values << relation.arel_table[Arel.star]
         end
-        values << "earth_distance(ll_to_earth(#{latitude_column}, #{longitude_column}),"\
-                  "ll_to_earth(#{lat}, #{lng})) as #{name}"
+        values << Utils.earth_distance(self, lat, lng, name)
+
         relation.select_values = values
       end
     end
