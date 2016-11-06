@@ -1,9 +1,9 @@
-#ActiveRecord + PostgreSQL Earthdistance [![Build Status](https://travis-ci.org/diogob/activerecord-postgres-earthdistance.svg?branch=master)](https://travis-ci.org/diogob/activerecord-postgres-earthdistance)
+# ActiveRecord + PostgreSQL Earthdistance [![Build Status](https://travis-ci.org/diogob/activerecord-postgres-earthdistance.svg?branch=master)](https://travis-ci.org/diogob/activerecord-postgres-earthdistance)
 
 Check distances with latitude and longitude using PostgreSQL special indexes.
 This gem enables your model to query the database using the earthdistance extension. This should be much faster than using trigonometry functions over standard indexes.
 
-##Requirements
+## Requirements
 
 Postgresql 9.1+ with contrib and Rails 3.1+
 On Ubuntu, this is easy: `sudo apt-get install postgresql-contrib-9.1`
@@ -14,7 +14,7 @@ On Mac you have a couple of options:
 * [Homebrew’s](https://github.com/mxcl/homebrew) Postgres installation also includes the contrib packages: `brew install postgres`
 * [Postgres.app](http://postgresapp.com/)
 
-##Install
+## Install
 
 
 Earthdistance is a PostgreSQL contrib module, [check it out first](http://www.postgresql.org/docs/9.2/static/earthdistance.html).
@@ -60,7 +60,7 @@ This will create the index with a SQL like this:
 CREATE INDEX places_earthdistance_ix ON places USING GIST (ll_to_earth(lat, lng));
 ```
 
-##Usage
+## Usage
 
 This gem only provides a custom serialization coder.
 If you want to use it just put in your Gemfile:
@@ -86,7 +86,15 @@ class Place < ActiveRecord::Base
 end
 ```
 
-###Querying the database
+You can also locale other entities through an geolocated association as in:
+```ruby
+class Job < ActiveRecord::Base
+  belongs_to :job
+  acts_as_geolocated through: :job
+end
+```
+
+### Querying the database
 
 To query for all places within a given radius of 100 meters from the origin -22.951916,-43.210487 just use:
 ```ruby
@@ -96,6 +104,11 @@ Place.within_radius(100, -22.951916, -43.210487).all
 You can also order the records based on the distance from a point
 ```ruby
 Place.within_radius(100, -22.951916,-43.210487).order_by_distance(-22.951916,-43.210487)
+```
+
+To query on associated models (the joins will be included for you):
+```ruby
+Job.within_radius(100, -22.951916,-43.210487)
 ```
 
 The `within_radius` query performs two checks: first against the *bounding box*, followed by computing the exact distance for
@@ -112,7 +125,7 @@ closest = Place.within_radius(100, *point).order_by_distance(*point).selecting_d
 closest.distance
 ```
 
-##Test Database
+## Test Database
 
 To have earthdistance enabled when you load your database schema (as happens in rake db:test:prepare), you
 have two options.
@@ -128,12 +141,12 @@ This will change your schema dumps from Ruby to SQL. If you're
 unsure about the implications of this change, we suggest reading this
 [Rails Guide](http://guides.rubyonrails.org/migrations.html#schema-dumping-and-you).
 
-##Help
+## Help
 
 You can use issues in github for that. Or else you can reach us at
 twitter: [@dbiazus](https://twitter.com/#!/dbiazus)
 
-##Note on Patches/Pull Requests
+## Note on Patches/Pull Requests
 
 
 * Fork the project.
@@ -142,6 +155,6 @@ twitter: [@dbiazus](https://twitter.com/#!/dbiazus)
 * Commit, do not mess with rakefile, version, or history.  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 
-##Copyright
+## Copyright
 
 Copyright © 2010 Diogo Biazus. See LICENSE for details.
