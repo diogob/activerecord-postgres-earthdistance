@@ -1,4 +1,4 @@
-require 'active_support'
+require "active_support"
 
 ActiveSupport.on_load :active_record do
   require "activerecord-postgres-earthdistance/activerecord"

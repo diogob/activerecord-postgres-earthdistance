@@ -1,9 +1,9 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__))
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-require 'rspec'
-require 'rspec/autorun'
-require 'activerecord-postgres-earthdistance'
-require 'active_record'
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
+require "rspec"
+require "rspec/autorun"
+require "activerecord-postgres-earthdistance"
+require "active_record"
 
 RSpec.configure do |config|
   config.before(:suite) do
@@ -36,7 +36,7 @@ RSpec.configure do |config|
         );
         CREATE TABLE jobs (id serial PRIMARY KEY, event_id integer);
 }
-    rescue Exception => e
+    rescue StandardError => e
       puts "Exception: #{e}"
       ActiveRecord::Base.establish_connection(
         adapter: "postgresql",
@@ -51,8 +51,8 @@ RSpec.configure do |config|
     end
 
     # Load models used in spec
-    require 'fixtures/place'
-    require 'fixtures/event'
-    require 'fixtures/job'
+    require "fixtures/place"
+    require "fixtures/event"
+    require "fixtures/job"
   end
 end

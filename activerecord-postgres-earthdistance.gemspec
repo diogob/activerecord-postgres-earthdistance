@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
-lib = File.expand_path('../lib/', __FILE__)
-$:.unshift lib unless $:.include?(lib)
+lib = File.expand_path("../lib/", __FILE__)
+$LOAD_PATH.unshift lib unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |s|
   s.name = "activerecord-postgres-earthdistance"
@@ -25,7 +25,11 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rdoc"
   s.add_development_dependency "rspec", "~> 2.11"
 
-  git_files            = `git ls-files`.split("\n") rescue ''
+  git_files            = begin
+                           `git ls-files`.split("\n")
+                         rescue
+                           ""
+                         end
   s.files              = git_files
   s.test_files         = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables        = []

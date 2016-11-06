@@ -1,10 +1,10 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe "ActiveRecord::Base.act_as_geolocated" do
-  describe 'ActiveRecord::Base' do
+  describe "ActiveRecord::Base" do
     context "when using .where with a model instance as a placeholder" do
       let(:place) { Place.create! }
-      subject { Place.where('id = ?', place).first }
+      subject { Place.where("id = ?", place).first }
       after { place.destroy! }
 
       it { should == place }
@@ -24,19 +24,19 @@ describe "ActiveRecord::Base.act_as_geolocated" do
     end
 
     context "when query for the exact same point with radius 0" do
-      let(:test_data) { { lat: -30.0277041, lng: -51.2287346 , radius: 0 } }
+      let(:test_data) { { lat: -30.0277041, lng: -51.2287346, radius: 0 } }
 
       it { should == [@place] }
     end
 
     context "when query for place within the box" do
-      let(:test_data) { { radius: 4000000, lat: -27.5969039, lng: -48.5494544 } }
+      let(:test_data) { { radius: 4_000_000, lat: -27.5969039, lng: -48.5494544 } }
 
       it { should == [@place] }
     end
 
     context "when query for place within the box, but outside the radius" do
-      let(:test_data) { { radius: 300000, lat: -27.5969039, lng: -48.5494544 } }
+      let(:test_data) { { radius: 300_000, lat: -27.5969039, lng: -48.5494544 } }
 
       it "the place shouldn't be within the radius" do
         Place.within_radius(test_data[:radius], test_data[:lat], test_data[:lng]).should be_empty
@@ -74,8 +74,8 @@ describe "ActiveRecord::Base.act_as_geolocated" do
   end
 
   describe "#within_radius" do
-    let(:test_data){ {lat: nil, lng: nil, radius: nil} }
-    subject{ Place.within_radius(test_data[:radius], test_data[:lat], test_data[:lng]) }
+    let(:test_data) { { lat: nil, lng: nil, radius: nil } }
+    subject { Place.within_radius(test_data[:radius], test_data[:lat], test_data[:lng]) }
     before(:all) do
       @place = Place.create!(lat: -30.0277041, lng: -51.2287346)
     end
@@ -85,22 +85,22 @@ describe "ActiveRecord::Base.act_as_geolocated" do
     end
 
     context "when query with null data" do
-      it{ should == [] }
+      it { should == [] }
     end
 
     context "when query for the exact same point with radius 0" do
-      let(:test_data){{lat: -30.0277041, lng: -51.2287346 , radius: 0}}
-      it{ should == [@place] }
+      let(:test_data) { { lat: -30.0277041, lng: -51.2287346, radius: 0 } }
+      it { should == [@place] }
     end
 
     context "when query for place within radius" do
-      let(:test_data){ {radius: 4000000, lat: -27.5969039, lng: -48.5494544} }
-      it{ should == [@place] }
+      let(:test_data) { { radius: 4_000_000, lat: -27.5969039, lng: -48.5494544 } }
+      it { should == [@place] }
     end
 
     context "when query for place outside the radius" do
-      let(:test_data){ {radius: 1000, lat: -27.5969039, lng: -48.5494544} }
-      it{ should == [] }
+      let(:test_data) { { radius: 1000, lat: -27.5969039, lng: -48.5494544 } }
+      it { should == [] }
     end
 
     context "uses lat and long of through table" do
@@ -119,29 +119,29 @@ describe "ActiveRecord::Base.act_as_geolocated" do
       end
 
       context "when query with null data" do
-        it{ should == [] }
+        it { should == [] }
       end
 
       context "when query for the exact same point with radius 0" do
-        let(:test_data){{lat: -30.0277041, lng: -51.2287346 , radius: 0}}
-        it{ should == [@job] }
+        let(:test_data) { { lat: -30.0277041, lng: -51.2287346, radius: 0 } }
+        it { should == [@job] }
       end
 
       context "when query for place within radius" do
-        let(:test_data){ {radius: 4000000, lat: -27.5969039, lng: -48.5494544} }
-        it{ should == [@job] }
+        let(:test_data) { { radius: 4_000_000, lat: -27.5969039, lng: -48.5494544 } }
+        it { should == [@job] }
       end
 
       context "when query for place outside the radius" do
-        let(:test_data){ {radius: 1000, lat: -27.5969039, lng: -48.5494544} }
-        it{ should == [] }
+        let(:test_data) { { radius: 1000, lat: -27.5969039, lng: -48.5494544 } }
+        it { should == [] }
       end
     end
   end
 
   describe "#order_by_distance" do
-    let(:current_location){ {lat: nil, lng: nil, radius: nil} }
-    subject{ Place.order_by_distance(current_location[:lat], current_location[:lng]) }
+    let(:current_location) { { lat: nil, lng: nil, radius: nil } }
+    subject { Place.order_by_distance(current_location[:lat], current_location[:lng]) }
     before(:all) do
       @place1 = Place.create!(lat: 52.370216, lng: 4.895168) # Amsterdam
       @place2 = Place.create!(lat: 52.520007, lng: 13.404954) # Berlin
@@ -152,34 +152,34 @@ describe "ActiveRecord::Base.act_as_geolocated" do
     end
 
     context "when sorting on distance" do
-      let(:current_location){{lat: 51.511214, lng: 0.119824}} # London
-      it{ should == [@place1, @place2] }
+      let(:current_location) { { lat: 51.511214, lng: 0.119824 } } # London
+      it { should == [@place1, @place2] }
     end
 
     context "when sorting on distance from another location" do
-      let(:current_location){{lat: 52.229676, lng: 21.012229}} # Warsaw
-      it{ should == [@place2, @place1] }
+      let(:current_location) { { lat: 52.229676, lng: 21.012229 } } # Warsaw
+      it { should == [@place2, @place1] }
     end
   end
 
   describe "#selecting_distance_from" do
-    let(:current_location){ {lat: nil, lng: nil, radius: nil} }
+    let(:current_location) { { lat: nil, lng: nil, radius: nil } }
     subject do
       Place
         .order_by_distance(current_location[:lat], current_location[:lng])
         .selecting_distance_from(current_location[:lat], current_location[:lng])
         .first
-        .try{|p| [p.data, p.distance.to_f] }
+        .try { |p| [p.data, p.distance.to_f] }
     end
     before(:all) do
-      @place = Place.create!(data: 'Amsterdam', lat: 52.370216, lng: 4.895168) # Amsterdam
+      @place = Place.create!(data: "Amsterdam", lat: 52.370216, lng: 4.895168) # Amsterdam
     end
     after(:all) do
       @place.destroy
     end
     context "when selecting distance" do
-      let(:current_location){{lat: 52.229676, lng: 21.012229}} # Warsaw
-      it{ should == ["Amsterdam", 1095013.87438311] }
+      let(:current_location) { { lat: 52.229676, lng: 21.012229 } } # Warsaw
+      it { should == ["Amsterdam", 1_095_013.87438311] }
     end
   end
 end

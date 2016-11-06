@@ -13,12 +13,12 @@ module ActiveRecordPostgresEarthdistance
 
       def within_box(radius, lat, lng)
         earth_box = Arel::Nodes::NamedFunction.new(
-          'earth_box',
+          "earth_box",
           [Utils.ll_to_earth_coords(lat, lng), Utils.quote_value(radius)]
         )
         where(
           Arel::Nodes::InfixOperation.new(
-            '<@',
+            "<@",
             Utils.ll_to_earth_columns(through_table_klass),
             earth_box
           )
@@ -27,19 +27,19 @@ module ActiveRecordPostgresEarthdistance
 
       def within_radius(radius, lat, lng)
         earth_distance = Arel::Nodes::NamedFunction.new(
-          'earth_distance',
+          "earth_distance",
           [
             Utils.ll_to_earth_columns(through_table_klass),
             Utils.ll_to_earth_coords(lat, lng)
           ]
         )
         within_box(radius, lat, lng)
-          .where(Arel::Nodes::InfixOperation.new('<=', earth_distance, Utils.quote_value(radius)))
+          .where(Arel::Nodes::InfixOperation.new("<=", earth_distance, Utils.quote_value(radius)))
       end
 
       def order_by_distance(lat, lng, order = "ASC")
         earth_distance = Arel::Nodes::NamedFunction.new(
-          'earth_distance',
+          "earth_distance",
           [
             Utils.ll_to_earth_columns(through_table_klass),
             Utils.ll_to_earth_coords(lat, lng)
@@ -62,13 +62,13 @@ module ActiveRecordPostgresEarthdistance
     module Utils
       def self.ll_to_earth_columns(klass)
         Arel::Nodes::NamedFunction.new(
-          'll_to_earth',
+          "ll_to_earth",
           [klass.arel_table[klass.latitude_column], klass.arel_table[klass.longitude_column]]
         )
       end
 
       def self.ll_to_earth_coords(lat, lng)
-        Arel::Nodes::NamedFunction.new('ll_to_earth', [quote_value(lat), quote_value(lng)])
+        Arel::Nodes::NamedFunction.new("ll_to_earth", [quote_value(lat), quote_value(lng)])
       end
 
       def self.quote_value(value)
@@ -82,13 +82,13 @@ module ActiveRecordPostgresEarthdistance
   end
 
   module QueryMethods
-    def selecting_distance_from(lat, lng, name="distance", include_default_columns=true)
+    def selecting_distance_from(lat, lng, name = "distance", include_default_columns = true)
       clone.tap do |relation|
         values = []
         if relation.select_values.empty? && include_default_columns
           values << relation.arel_table[Arel.star]
         end
-        values << "earth_distance(ll_to_earth(#{self.latitude_column}, #{self.longitude_column}),"\
+        values << "earth_distance(ll_to_earth(#{latitude_column}, #{longitude_column}),"\
                   "ll_to_earth(#{lat}, #{lng})) as #{name}"
         relation.select_values = values
       end

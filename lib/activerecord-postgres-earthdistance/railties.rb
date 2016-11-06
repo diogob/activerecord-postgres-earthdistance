@@ -1,13 +1,13 @@
-require 'rails'
-require 'rails/generators'
-require 'rails/generators/migration'
-require 'active_record'
+require "rails"
+require "rails/generators"
+require "rails/generators/migration"
+require "active_record"
 # = Earth Distance Railtie
 #
 # Creates a new railtie for 2 reasons:
 #
 # * Initialize ActiveRecord properly
-# * Add earthdistance:setup generator 
+# * Add earthdistance:setup generator
 class EarthDistance < Rails::Railtie
   # Creates the earthdistance:setup generator. This generator creates a migration that
   # adds earthdistance support for your database. If fact, it's just the sql from the
@@ -20,7 +20,7 @@ class EarthDistance < Rails::Railtie
     include Rails::Generators::Migration
 
     def self.source_root
-      @source_root ||= File.join(File.dirname(__FILE__), '..', 'templates')
+      @source_root ||= File.join(File.dirname(__FILE__), "..", "templates")
     end
 
     def self.next_migration_number(dirname)
@@ -32,8 +32,7 @@ class EarthDistance < Rails::Railtie
     end
 
     def create_migration_file
-      migration_template 'setup_earthdistance.rb', 'db/migrate/setup_earthdistance.rb'
+      migration_template "setup_earthdistance.rb", "db/migrate/setup_earthdistance.rb"
     end
   end
 end
-

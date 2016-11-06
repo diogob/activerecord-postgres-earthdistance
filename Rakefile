@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
-$:.unshift File.expand_path("../lib", __FILE__)
-require 'bundler/gem_tasks'
-require 'rubygems'
-require 'rspec/core/rake_task'
-require 'rdoc/task'
+$LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
+require "bundler/gem_tasks"
+require "rubygems"
+require "rspec/core/rake_task"
+require "rdoc/task"
 
 task default: :spec
 
@@ -18,10 +18,9 @@ end
 RSpec::Core::RakeTask.new(:spec)
 
 RDoc::Task.new do |rdoc|
-  version = File.exist?('VERSION') ? File.read('VERSION') : ""
-  rdoc.rdoc_dir = 'rdoc'
+  version = File.exist?("VERSION") ? File.read("VERSION") : ""
+  rdoc.rdoc_dir = "rdoc"
   rdoc.title = "activerecord-postgres-hstore #{version}"
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb')
+  rdoc.rdoc_files.include("README*")
+  rdoc.rdoc_files.include("lib/**/*.rb")
 end
-
