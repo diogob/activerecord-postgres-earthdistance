@@ -95,6 +95,40 @@ describe "ActiveRecord::Base.act_as_geolocated" do
       let(:test_data){ {radius: 1000, lat: -27.5969039, lng: -48.5494544} }
       it{ should == [] }
     end
+
+    context "uses lat and long of through table" do
+
+      subject{ Job.joins(:event).within_radius(test_data[:radius], test_data[:lat], test_data[:lng]) }
+
+      before(:all) do
+        @event = Event.create!(:lat => -30.0277041, :lng => -51.2287346)
+        @job = Job.create!(event: @event)
+      end
+
+      after(:all) do
+        @event.destroy
+        @job.destroy
+      end
+
+      context "when query with null data" do
+        it{ should == [] }
+      end
+
+      context "when query for the exact same point with radius 0" do
+        let(:test_data){{lat: -30.0277041, lng: -51.2287346 , radius: 0}}
+        it{ should == [@job] }
+      end
+
+      context "when query for place within radius" do
+        let(:test_data){ {radius: 4000000, lat: -27.5969039, lng: -48.5494544} }
+        it{ should == [@job] }
+      end
+
+      context "when query for place outside the radius" do
+        let(:test_data){ {radius: 1000, lat: -27.5969039, lng: -48.5494544} }
+        it{ should == [] }
+      end
+    end
   end
 
   describe "#order_by_distance" do
