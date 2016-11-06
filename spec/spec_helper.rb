@@ -55,5 +55,4 @@ RSpec.configure do |config|
     require 'fixtures/event'
     require 'fixtures/job'
   end
-
 end

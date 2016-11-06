@@ -34,7 +34,6 @@ class EarthDistance < Rails::Railtie
     def create_migration_file
       migration_template 'setup_earthdistance.rb', 'db/migrate/setup_earthdistance.rb'
     end
-
   end
 end
 

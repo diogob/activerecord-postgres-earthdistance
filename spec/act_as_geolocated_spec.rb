@@ -104,7 +104,6 @@ describe "ActiveRecord::Base.act_as_geolocated" do
     end
 
     context "uses lat and long of through table" do
-
       subject do
         Job.joins(:event).within_radius(test_data[:radius], test_data[:lat], test_data[:lng])
       end
@@ -166,11 +165,11 @@ describe "ActiveRecord::Base.act_as_geolocated" do
   describe "#selecting_distance_from" do
     let(:current_location){ {lat: nil, lng: nil, radius: nil} }
     subject do
-      Place.
-        order_by_distance(current_location[:lat], current_location[:lng]).
-        selecting_distance_from(current_location[:lat], current_location[:lng]).
-        first.
-        try{|p| [p.data, p.distance.to_f] }
+      Place
+        .order_by_distance(current_location[:lat], current_location[:lng])
+        .selecting_distance_from(current_location[:lat], current_location[:lng])
+        .first
+        .try{|p| [p.data, p.distance.to_f] }
     end
     before(:all) do
       @place = Place.create!(data: 'Amsterdam', lat: 52.370216, lng: 4.895168) #Amsterdam
