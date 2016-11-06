@@ -27,25 +27,13 @@ module ActiveRecordPostgresEarthdistance
       end
 
       def within_radius(radius, lat, lng)
-        earth_distance = Arel::Nodes::NamedFunction.new(
-          "earth_distance",
-          [
-            Utils.ll_to_earth_columns(through_table_klass),
-            Utils.ll_to_earth_coords(lat, lng)
-          ]
-        )
+        earth_distance = Utils.earth_distance(through_table_klass, lat, lng)
         within_box(radius, lat, lng)
           .where(Arel::Nodes::InfixOperation.new("<=", earth_distance, Utils.quote_value(radius)))
       end
 
       def order_by_distance(lat, lng, order = "ASC")
-        earth_distance = Arel::Nodes::NamedFunction.new(
-          "earth_distance",
-          [
-            Utils.ll_to_earth_columns(through_table_klass),
-            Utils.ll_to_earth_coords(lat, lng)
-          ]
-        )
+        earth_distance = Utils.earth_distance(through_table_klass, lat, lng)
         joins(through_table).order("#{earth_distance.to_sql} #{order}")
       end
 
@@ -61,6 +49,16 @@ module ActiveRecordPostgresEarthdistance
     end
 
     module Utils
+      def self.earth_distance(through_table_klass, lat, lng)
+        Arel::Nodes::NamedFunction.new(
+          "earth_distance",
+          [
+            ll_to_earth_columns(through_table_klass),
+            ll_to_earth_coords(lat, lng)
+          ]
+        )
+      end
+
       def self.ll_to_earth_columns(klass)
         Arel::Nodes::NamedFunction.new(
           "ll_to_earth",
