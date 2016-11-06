@@ -105,7 +105,7 @@ describe "ActiveRecord::Base.act_as_geolocated" do
 
     context "uses lat and long of through table" do
       subject do
-        Job.joins(:event).within_radius(test_data[:radius], test_data[:lat], test_data[:lng])
+        Job.within_radius(test_data[:radius], test_data[:lat], test_data[:lng])
       end
 
       before(:all) do
@@ -141,24 +141,44 @@ describe "ActiveRecord::Base.act_as_geolocated" do
 
   describe "#order_by_distance" do
     let(:current_location) { { lat: nil, lng: nil, radius: nil } }
+
     subject { Place.order_by_distance(current_location[:lat], current_location[:lng]) }
+
     before(:all) do
-      @place1 = Place.create!(lat: 52.370216, lng: 4.895168) # Amsterdam
-      @place2 = Place.create!(lat: 52.520007, lng: 13.404954) # Berlin
+      @amsterdam = Place.create!(lat: 52.370216, lng: 4.895168)
+      @berlin = Place.create!(lat: 52.520007, lng: 13.404954) # Berlin
+      @event_in_amsterdam = Event.create!(lat: 52.370216, lng: 4.895168)
+      @event_in_berlin = Event.create!(lat: 52.520007, lng: 13.404954)
+      @amsterdam_job = Job.create!(event: @event_in_amsterdam)
+      @berlin_job = Job.create!(event: @event_in_berlin)
     end
+
     after(:all) do
-      @place1.destroy
-      @place2.destroy
+      @amsterdam.destroy
+      @berlin.destroy
+      @event_in_amsterdam.destroy
+      @event_in_berlin.destroy
+      @amsterdam_job.destroy
+      @berlin_job.destroy
+    end
+
+    context "uses lat and long of through table" do
+      subject do
+        Job.order_by_distance(current_location[:lat], current_location[:lng])
+      end
+
+      let(:current_location) { { lat: 51.511214, lng: 0.119824 } } # London
+      it { should == [@amsterdam_job, @berlin_job] }
     end
 
     context "when sorting on distance" do
       let(:current_location) { { lat: 51.511214, lng: 0.119824 } } # London
-      it { should == [@place1, @place2] }
+      it { should == [@amsterdam, @berlin] }
     end
 
     context "when sorting on distance from another location" do
       let(:current_location) { { lat: 52.229676, lng: 21.012229 } } # Warsaw
-      it { should == [@place2, @place1] }
+      it { should == [@berlin, @amsterdam] }
     end
   end
 

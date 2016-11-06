@@ -16,13 +16,14 @@ module ActiveRecordPostgresEarthdistance
           "earth_box",
           [Utils.ll_to_earth_coords(lat, lng), Utils.quote_value(radius)]
         )
-        where(
-          Arel::Nodes::InfixOperation.new(
-            "<@",
-            Utils.ll_to_earth_columns(through_table_klass),
-            earth_box
+        joins(through_table)
+          .where(
+            Arel::Nodes::InfixOperation.new(
+              "<@",
+              Utils.ll_to_earth_columns(through_table_klass),
+              earth_box
+            )
           )
-        )
       end
 
       def within_radius(radius, lat, lng)
@@ -45,7 +46,7 @@ module ActiveRecordPostgresEarthdistance
             Utils.ll_to_earth_coords(lat, lng)
           ]
         )
-        order("#{earth_distance.to_sql} #{order}")
+        joins(through_table).order("#{earth_distance.to_sql} #{order}")
       end
 
       private
