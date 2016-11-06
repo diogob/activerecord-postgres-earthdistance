@@ -23,14 +23,14 @@ Lint/RescueException:
 Metrics/LineLength:
   Max: 100
 
-# Offense count: 6
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
 Style/Documentation:
-  Exclude:
-    - 'spec/**/*'
-    - 'test/**/*'
-    - 'lib/activerecord-postgres-earthdistance/activerecord.rb'
-    - 'lib/activerecord-postgres-earthdistance/acts_as_geolocated.rb'
-    - 'lib/templates/setup_earthdistance.rb'
+  Enabled: false
 
 # Offense count: 4
 # Cop supports --auto-correct.

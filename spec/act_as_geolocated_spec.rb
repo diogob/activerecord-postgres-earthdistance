@@ -56,12 +56,19 @@ describe "ActiveRecord::Base.act_as_geolocated" do
       subject { Place.within_box(test_data[:radius], test_data[:lat], test_data[:lng]) }
 
       it "should work with objects having columns with the same name" do
-        expect { Place.joins(:events).within_radius(test_data[:radius], test_data[:lat], test_data[:lng]).to_a }.to_not raise_error
-
+        expect do
+          Place
+            .joins(:events)
+            .within_radius(test_data[:radius], test_data[:lat], test_data[:lng]).to_a
+        end.to_not raise_error
       end
 
       it "should work with nested associations" do
-        expect { Event.joins(:events).within_radius(test_data[:radius], test_data[:lat], test_data[:lng]).to_a }.to_not raise_error
+        expect do
+          Event
+            .joins(:events)
+            .within_radius(test_data[:radius], test_data[:lat], test_data[:lng]).to_a
+        end.to_not raise_error
       end
     end
   end
@@ -98,7 +105,9 @@ describe "ActiveRecord::Base.act_as_geolocated" do
 
     context "uses lat and long of through table" do
 
-      subject{ Job.joins(:event).within_radius(test_data[:radius], test_data[:lat], test_data[:lng]) }
+      subject do
+        Job.joins(:event).within_radius(test_data[:radius], test_data[:lat], test_data[:lng])
+      end
 
       before(:all) do
         @event = Event.create!(lat: -30.0277041, lng: -51.2287346)
@@ -135,22 +144,22 @@ describe "ActiveRecord::Base.act_as_geolocated" do
     let(:current_location){ {lat: nil, lng: nil, radius: nil} }
     subject{ Place.order_by_distance(current_location[:lat], current_location[:lng]) }
     before(:all) do
-      @place_1 = Place.create!(lat: 52.370216, lng: 4.895168) #Amsterdam
-      @place_2 = Place.create!(lat: 52.520007, lng: 13.404954) #Berlin
+      @place1 = Place.create!(lat: 52.370216, lng: 4.895168) #Amsterdam
+      @place2 = Place.create!(lat: 52.520007, lng: 13.404954) #Berlin
     end
     after(:all) do
-      @place_1.destroy
-      @place_2.destroy
+      @place1.destroy
+      @place2.destroy
     end
 
     context "when sorting on distance" do
       let(:current_location){{lat: 51.511214, lng: 0.119824}} #London
-      it{ should == [@place_1, @place_2] }
+      it{ should == [@place1, @place2] }
     end
 
     context "when sorting on distance from another location" do
       let(:current_location){{lat: 52.229676, lng: 21.012229}} #Warsaw
-      it{ should == [@place_2, @place_1] }
+      it{ should == [@place2, @place1] }
     end
   end
 

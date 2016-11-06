@@ -26,7 +26,14 @@ RSpec.configure do |config|
         DROP TABLE IF EXISTS events;
         DROP TABLE IF EXISTS jobs;
         CREATE TABLE places (id serial PRIMARY KEY, data text, lat float8, lng float8);
-        CREATE TABLE events (id serial PRIMARY KEY, event_id integer, place_id integer, data text, lat float8, lng float8);
+        CREATE TABLE events (
+          id serial PRIMARY KEY,
+          event_id integer,
+          place_id integer,
+          data text,
+          lat float8,
+          lng float8
+        );
         CREATE TABLE jobs (id serial PRIMARY KEY, event_id integer);
 }
     rescue Exception => e
