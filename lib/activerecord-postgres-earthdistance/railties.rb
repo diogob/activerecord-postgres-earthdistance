@@ -27,7 +27,7 @@ class EarthDistance < Rails::Railtie
       if ActiveRecord::Base.timestamped_migrations
         Time.now.utc.strftime("%Y%m%d%H%M%S")
       else
-        "%.3d" % (current_migration_number(dirname) + 1)
+        "%.3d".format(current_migration_number(dirname) + 1)
       end
     end
 

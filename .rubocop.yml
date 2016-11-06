@@ -38,13 +38,6 @@ Style/FileName:
   Exclude:
     - 'lib/activerecord-postgres-earthdistance.rb'
 
-# Offense count: 3
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: format, sprintf, percent
-Style/FormatString:
-  Exclude:
-    - 'lib/activerecord-postgres-earthdistance/activerecord.rb'
-    - 'lib/activerecord-postgres-earthdistance/railties.rb'
 
 # Offense count: 6
 # Cop supports --auto-correct.
