@@ -37,8 +37,6 @@ module ActiveRecordPostgresEarthdistance
         joins(through_table).order("#{earth_distance.to_sql} #{order}")
       end
 
-      private
-
       def through_table_klass
         if through_table.present?
           reflections[through_table.to_s].klass
@@ -84,11 +82,12 @@ module ActiveRecordPostgresEarthdistance
   module QueryMethods
     def selecting_distance_from(lat, lng, name = "distance", include_default_columns = true)
       clone.tap do |relation|
+        relation.joins!(through_table)
         values = []
         if relation.select_values.empty? && include_default_columns
           values << relation.arel_table[Arel.star]
         end
-        values << Utils.earth_distance(self, lat, lng, name)
+        values << Utils.earth_distance(through_table_klass, lat, lng, name)
 
         relation.select_values = values
       end
