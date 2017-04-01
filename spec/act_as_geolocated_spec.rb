@@ -7,7 +7,7 @@ describe "ActiveRecord::Base.act_as_geolocated" do
       subject { Place.where("id = ?", place).first }
       after { place.destroy! }
 
-      it { should == place }
+      it { is_expected.to eq place }
     end
   end
 
@@ -20,34 +20,34 @@ describe "ActiveRecord::Base.act_as_geolocated" do
     after(:all) { @place.destroy }
 
     context "when query with null data" do
-      it { should be_empty }
+      it { is_expected.to be_empty }
     end
 
     context "when query for the exact same point with radius 0" do
       let(:test_data) { { lat: -30.0277041, lng: -51.2287346, radius: 0 } }
 
-      it { should == [@place] }
+      it { is_expected.to eq [@place] }
     end
 
     context "when query for place within the box" do
       let(:test_data) { { radius: 4_000_000, lat: -27.5969039, lng: -48.5494544 } }
 
-      it { should == [@place] }
+      it { is_expected.to eq [@place] }
     end
 
     context "when query for place within the box, but outside the radius" do
       let(:test_data) { { radius: 300_000, lat: -27.5969039, lng: -48.5494544 } }
 
       it "the place shouldn't be within the radius" do
-        Place.within_radius(test_data[:radius], test_data[:lat], test_data[:lng]).should be_empty
+        expect(Place.within_radius(test_data[:radius], test_data[:lat], test_data[:lng])).to be_empty
       end
 
-      it { should == [@place] }
+      it { is_expected.to eq [@place] }
     end
 
     context "when query for place outside the box" do
       let(:test_data) { { radius: 1000, lat: -27.5969039, lng: -48.5494544 } }
-      it { should be_empty }
+      it { is_expected.to be_empty }
     end
 
     context "when joining tables that are also geoloacted" do
@@ -85,22 +85,22 @@ describe "ActiveRecord::Base.act_as_geolocated" do
     end
 
     context "when query with null data" do
-      it { should == [] }
+      it { is_expected.to eq [] }
     end
 
     context "when query for the exact same point with radius 0" do
       let(:test_data) { { lat: -30.0277041, lng: -51.2287346, radius: 0 } }
-      it { should == [@place] }
+      it { is_expected.to eq [@place] }
     end
 
     context "when query for place within radius" do
       let(:test_data) { { radius: 4_000_000, lat: -27.5969039, lng: -48.5494544 } }
-      it { should == [@place] }
+      it { is_expected.to eq [@place] }
     end
 
     context "when query for place outside the radius" do
       let(:test_data) { { radius: 1000, lat: -27.5969039, lng: -48.5494544 } }
-      it { should == [] }
+      it { is_expected.to eq [] }
     end
 
     context "uses lat and long of through table" do
@@ -119,22 +119,22 @@ describe "ActiveRecord::Base.act_as_geolocated" do
       end
 
       context "when query with null data" do
-        it { should == [] }
+        it { is_expected.to eq [] }
       end
 
       context "when query for the exact same point with radius 0" do
         let(:test_data) { { lat: -30.0277041, lng: -51.2287346, radius: 0 } }
-        it { should == [@job] }
+        it { is_expected.to eq [@job] }
       end
 
       context "when query for place within radius" do
         let(:test_data) { { radius: 4_000_000, lat: -27.5969039, lng: -48.5494544 } }
-        it { should == [@job] }
+        it { is_expected.to eq [@job] }
       end
 
       context "when query for place outside the radius" do
         let(:test_data) { { radius: 1000, lat: -27.5969039, lng: -48.5494544 } }
-        it { should == [] }
+        it { is_expected.to eq [] }
       end
     end
   end
@@ -168,17 +168,17 @@ describe "ActiveRecord::Base.act_as_geolocated" do
       end
 
       let(:current_location) { { lat: 51.511214, lng: 0.119824 } } # London
-      it { should == [@amsterdam_job, @berlin_job] }
+      it { is_expected.to eq [@amsterdam_job, @berlin_job] }
     end
 
     context "when sorting on distance" do
       let(:current_location) { { lat: 51.511214, lng: 0.119824 } } # London
-      it { should == [@amsterdam, @berlin] }
+      it { is_expected.to eq [@amsterdam, @berlin] }
     end
 
     context "when sorting on distance from another location" do
       let(:current_location) { { lat: 52.229676, lng: 21.012229 } } # Warsaw
-      it { should == [@berlin, @amsterdam] }
+      it { is_expected.to eq [@berlin, @amsterdam] }
     end
   end
 
@@ -199,7 +199,7 @@ describe "ActiveRecord::Base.act_as_geolocated" do
     end
     context "when selecting distance" do
       let(:current_location) { { lat: 52.229676, lng: 21.012229 } } # Warsaw
-      it { should == ["Amsterdam", 1_095_013.87438311] }
+      it { is_expected.to eq ["Amsterdam", 1_095_013.87438311] }
     end
 
     context "through table" do
@@ -217,7 +217,7 @@ describe "ActiveRecord::Base.act_as_geolocated" do
       end
 
       context "when selecting distance" do
-        it { should respond_to :distance }
+        it { is_expected.to respond_to :distance }
       end
     end
   end
