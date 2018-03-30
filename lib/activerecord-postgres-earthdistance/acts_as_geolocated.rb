@@ -3,19 +3,22 @@ module ActiveRecordPostgresEarthdistance
     extend ActiveSupport::Concern
 
     module ClassMethods
+      MILES_TO_METERS_FACTOR = 1609.344
       def acts_as_geolocated(options = {})
         if table_exists?
-          cattr_accessor :latitude_column, :longitude_column, :through_table
+          cattr_accessor :latitude_column, :longitude_column, :through_table, :distance_unit
           self.latitude_column = options[:lat] || (column_names.include?("lat") ? "lat" : "latitude")
           self.longitude_column = options[:lng] ||
                                   (column_names.include?("lng") ? "lng" : "longitude")
           self.through_table = options[:through]
+          self.distance_unit = options[:distance_unit]
         else
           puts "[WARNING] table #{table_name} doesn't exist, acts_as_geolocated won't work. Skip this warning if you are running db migration"
         end
       end
 
       def within_box(radius, lat, lng)
+        radius = radius.try(:*, MILES_TO_METERS_FACTOR) if distance_unit === :miles
         earth_box = Arel::Nodes::NamedFunction.new(
           "earth_box",
           [Utils.ll_to_earth_coords(lat, lng), Utils.quote_value(radius)]
@@ -31,6 +34,7 @@ module ActiveRecordPostgresEarthdistance
       end
 
       def within_radius(radius, lat, lng)
+        radius = radius.try(:*, MILES_TO_METERS_FACTOR) if distance_unit === :miles
         earth_distance = Utils.earth_distance(through_table_klass, lat, lng)
         within_box(radius, lat, lng)
           .where(Arel::Nodes::InfixOperation.new("<=", earth_distance, Utils.quote_value(radius)))
