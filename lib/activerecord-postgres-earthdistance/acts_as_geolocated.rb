@@ -13,6 +13,7 @@ module ActiveRecordPostgresEarthdistance
         else
           puts "[WARNING] table #{table_name} doesn't exist, acts_as_geolocated won't work. Skip this warning if you are running db migration"
         end
+      rescue ActiveRecord::NoDatabaseError
       end
 
       def within_box(radius, lat, lng)
