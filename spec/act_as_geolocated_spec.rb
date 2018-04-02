@@ -73,6 +73,74 @@ describe "ActiveRecord::Base.act_as_geolocated" do
     end
   end
 
+  describe "#within_box with miles" do
+    let(:test_data) { { lat: nil, lng: nil, radius: nil } }
+
+    subject { Place.within_box(test_data[:radius], test_data[:lat], test_data[:lng]) }
+
+    before(:all) { 
+      Place.acts_as_geolocated distance_unit: :miles
+      @place = Place.create!(lat: -30.0277041, lng: -51.2287346) 
+    }
+    after(:all) { 
+      Place.acts_as_geolocated
+      @place.destroy 
+    }
+
+    context "when query with null data" do
+      it { is_expected.to be_empty }
+    end
+
+    context "when query for the exact same point with radius 0" do
+      let(:test_data) { { lat: -30.0277041, lng: -51.2287346, radius: 0 } }
+      
+      it { is_expected.to eq [@place] }
+    end
+
+    context "when query for place within the box" do
+      let(:test_data) { { radius: 2400, lat: -27.5969039, lng: -48.5494544 } }
+
+      it { is_expected.to eq [@place] }
+    end
+
+    context "when query for place within the box, but outside the radius" do
+      let(:test_data) { { radius: 186, lat: -27.5969039, lng: -48.5494544 } }
+
+      it "the place shouldn't be within the radius" do
+        expect(Place.within_radius(test_data[:radius], test_data[:lat], test_data[:lng])).to be_empty
+      end
+
+      it { is_expected.to eq [@place] }
+    end
+
+    context "when query for place outside the box" do
+      let(:test_data) { { radius: 0.62, lat: -27.5969039, lng: -48.5494544 } }
+      it { is_expected.to be_empty }
+    end
+
+    context "when joining tables that are also geoloacted" do
+      let(:test_data) { { radius: 0.62, lat: -27.5969039, lng: -48.5494544 } }
+
+      subject { Place.within_box(test_data[:radius], test_data[:lat], test_data[:lng]) }
+
+      it "should work with objects having columns with the same name" do
+        expect do
+          Place
+            .joins(:events)
+            .within_radius(test_data[:radius], test_data[:lat], test_data[:lng]).to_a
+        end.to_not raise_error
+      end
+
+      it "should work with nested associations" do
+        expect do
+          Event
+            .joins(:events)
+            .within_radius(test_data[:radius], test_data[:lat], test_data[:lng]).to_a
+        end.to_not raise_error
+      end
+    end
+  end
+
   describe "#within_radius" do
     let(:test_data) { { lat: nil, lng: nil, radius: nil } }
     subject { Place.within_radius(test_data[:radius], test_data[:lat], test_data[:lng]) }
@@ -100,6 +168,75 @@ describe "ActiveRecord::Base.act_as_geolocated" do
 
     context "when query for place outside the radius" do
       let(:test_data) { { radius: 1000, lat: -27.5969039, lng: -48.5494544 } }
+      it { is_expected.to eq [] }
+    end
+
+    context "uses lat and long of through table" do
+      subject do
+        Job.within_radius(test_data[:radius], test_data[:lat], test_data[:lng])
+      end
+
+      before(:all) do
+        @event = Event.create!(lat: -30.0277041, lng: -51.2287346)
+        @job = Job.create!(event: @event)
+      end
+
+      after(:all) do
+        @event.destroy
+        @job.destroy
+      end
+
+      context "when query with null data" do
+        it { is_expected.to eq [] }
+      end
+
+      context "when query for the exact same point with radius 0" do
+        let(:test_data) { { lat: -30.0277041, lng: -51.2287346, radius: 0 } }
+        it { is_expected.to eq [@job] }
+      end
+
+      context "when query for place within radius" do
+        let(:test_data) { { radius: 4_000_000, lat: -27.5969039, lng: -48.5494544 } }
+        it { is_expected.to eq [@job] }
+      end
+
+      context "when query for place outside the radius" do
+        let(:test_data) { { radius: 1000, lat: -27.5969039, lng: -48.5494544 } }
+        it { is_expected.to eq [] }
+      end
+    end
+  end
+
+  describe "#within_radius with miles" do
+    let(:test_data) { { lat: nil, lng: nil, radius: nil } }
+    subject { Place.within_radius(test_data[:radius], test_data[:lat], test_data[:lng]) }
+    before(:all) do
+      # Place.distance_unit = :miles
+      Place.acts_as_geolocated distance_unit: :miles
+      @place = Place.create!(lat: -30.0277041, lng: -51.2287346)
+    end
+
+    after(:all) do
+      Place.acts_as_geolocated
+      @place.destroy
+    end
+
+    context "when query with null data" do
+      it { is_expected.to eq [] }
+    end
+
+    context "when query for the exact same point with radius 0" do
+      let(:test_data) { { lat: -30.0277041, lng: -51.2287346, radius: 0 } }
+      it { is_expected.to eq [@place] }
+    end
+
+    context "when query for place within radius" do
+      let(:test_data) { { radius: 2400, lat: -27.5969039, lng: -48.5494544 } }
+      it { is_expected.to eq [@place] }
+    end
+
+    context "when query for place outside the radius" do
+      let(:test_data) { { radius: 0.62, lat: -27.5969039, lng: -48.5494544 } }
       it { is_expected.to eq [] }
     end
 
