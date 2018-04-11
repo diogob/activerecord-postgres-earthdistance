@@ -43,7 +43,7 @@ module ActiveRecordPostgresEarthdistance
 
       def order_by_distance(lat, lng, order = "ASC")
         earth_distance = Utils.earth_distance(through_table_klass, lat, lng)
-        joins(through_table).order("#{earth_distance.to_sql} #{order}")
+        joins(through_table).order(Arel.sql("#{earth_distance.to_sql} #{order}"))
       end
 
       def through_table_klass
