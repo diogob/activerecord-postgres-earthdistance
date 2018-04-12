@@ -358,4 +358,46 @@ describe "ActiveRecord::Base.act_as_geolocated" do
       end
     end
   end
+
+  describe "#selecting_distance_from with miles" do
+    let(:current_location) { { lat: nil, lng: nil, radius: nil } }
+    subject do
+      Place
+        .order_by_distance(current_location[:lat], current_location[:lng])
+        .selecting_distance_from(current_location[:lat], current_location[:lng])
+        .first
+        .try { |p| [p.data, p.distance.to_f] }
+    end
+    before(:all) do
+      Place.acts_as_geolocated distance_unit: :miles
+      @place = Place.create!(data: "Amsterdam", lat: 52.370216, lng: 4.895168) # Amsterdam
+    end
+    after(:all) do
+      Place.acts_as_geolocated
+      @place.destroy
+    end
+    context "when selecting distance" do
+      let(:current_location) { { lat: 52.229676, lng: 21.012229 } } # Warsaw
+      it { is_expected.to eq ["Amsterdam", 680.410076641856] }
+    end
+
+    context "through table" do
+
+      subject { Job.all.selecting_distance_from(current_location[:lat], current_location[:lng]).first }
+
+      before(:all) do
+        @event = Event.create!(lat: -30.0277041, lng: -51.2287346)
+        @job = Job.create!(event: @event)
+      end
+
+      after(:all) do
+        @event.destroy
+        @job.destroy
+      end
+
+      context "when selecting distance" do
+        it { is_expected.to respond_to :distance }
+      end
+    end
+  end
 end

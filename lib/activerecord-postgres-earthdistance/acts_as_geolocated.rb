@@ -1,9 +1,10 @@
 module ActiveRecordPostgresEarthdistance
+  MILES_TO_METERS_FACTOR = 1609.344
   module ActsAsGeolocated
     extend ActiveSupport::Concern
+    
 
-    module ClassMethods
-      MILES_TO_METERS_FACTOR = 1609.344
+    module ClassMethods  
       def acts_as_geolocated(options = {})
         if table_exists?
           cattr_accessor :latitude_column, :longitude_column, :through_table, :distance_unit
@@ -95,7 +96,12 @@ module ActiveRecordPostgresEarthdistance
         if relation.select_values.empty? && include_default_columns
           values << relation.arel_table[Arel.star]
         end
-        values << Utils.earth_distance(through_table_klass, lat, lng, name)
+        distances = Utils.earth_distance(through_table_klass, lat, lng, name)
+        distances = Arel::Nodes::Multiplication.new(
+          Utils.quote_value(1 / MILES_TO_METERS_FACTOR), distances
+        ) if relation.distance_unit === :miles
+
+        values << distances
 
         relation.select_values = values
       end
