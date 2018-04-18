@@ -6,7 +6,7 @@ module ActiveRecordPostgresEarthdistance
 
     module ClassMethods  
       def acts_as_geolocated(options = {})
-        if table_exists?
+        if ActiveRecord::Base.connection.data_source_exists?(table_name)
           cattr_accessor :latitude_column, :longitude_column, :through_table, :distance_unit
           self.latitude_column = options[:lat] || (column_names.include?("lat") ? "lat" : "latitude")
           self.longitude_column = options[:lng] ||
