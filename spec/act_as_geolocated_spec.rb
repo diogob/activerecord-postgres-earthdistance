@@ -103,6 +103,12 @@ describe "ActiveRecord::Base.act_as_geolocated" do
       it { is_expected.to eq [@place] }
     end
 
+    context "when radius is a string" do
+      let(:test_data) { { radius: '2400', lat: -27.5969039, lng: -48.5494544 } }
+
+      it { is_expected.to eq [@place] }
+    end
+
     context "when query for place within the box, but outside the radius" do
       let(:test_data) { { radius: 186, lat: -27.5969039, lng: -48.5494544 } }
 
@@ -232,6 +238,11 @@ describe "ActiveRecord::Base.act_as_geolocated" do
 
     context "when query for place within radius" do
       let(:test_data) { { radius: 2400, lat: -27.5969039, lng: -48.5494544 } }
+      it { is_expected.to eq [@place] }
+    end
+
+    context "when radius is a string" do
+      let(:test_data) { { radius: '2400', lat: -27.5969039, lng: -48.5494544 } }
       it { is_expected.to eq [@place] }
     end
 
