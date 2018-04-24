@@ -217,7 +217,6 @@ describe "ActiveRecord::Base.act_as_geolocated" do
     let(:test_data) { { lat: nil, lng: nil, radius: nil } }
     subject { Place.within_radius(test_data[:radius], test_data[:lat], test_data[:lng]) }
     before(:all) do
-      # Place.distance_unit = :miles
       Place.acts_as_geolocated distance_unit: :miles
       @place = Place.create!(lat: -30.0277041, lng: -51.2287346)
     end
