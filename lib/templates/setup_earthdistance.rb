@@ -1,4 +1,4 @@
-class SetupEarthdistance < ActiveRecord::Migration
+class SetupEarthdistance < ActiveRecord::Migration<%= migration_version %>
   def self.up
     execute "CREATE EXTENSION IF NOT EXISTS cube"
     execute "CREATE EXTENSION IF NOT EXISTS earthdistance"

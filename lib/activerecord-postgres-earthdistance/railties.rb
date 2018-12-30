@@ -32,7 +32,19 @@ class EarthDistance < Rails::Railtie
     end
 
     def create_migration_file
-      migration_template "setup_earthdistance.rb", "db/migrate/setup_earthdistance.rb"
+      migration_template "setup_earthdistance.rb", "db/migrate/setup_earthdistance.rb", migration_version: migration_version
+    end
+
+    private
+
+    def requires_migration_version?
+      Rails::VERSION::MAJOR >= 5
+    end
+
+    def migration_version
+      if requires_migration_version?
+        "[#{Rails::VERSION::MAJOR}.#{Rails::VERSION::MINOR}]"
+      end
     end
   end
 end
