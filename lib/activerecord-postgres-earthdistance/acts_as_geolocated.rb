@@ -23,7 +23,7 @@ module ActiveRecordPostgresEarthdistance
       end
 
       def within_box(radius, lat, lng)
-        radius = radius.try(:*, MILES_TO_METERS_FACTOR) if distance_unit === :miles
+        radius = radius.to_f * MILES_TO_METERS_FACTOR if distance_unit === :miles
         earth_box = Arel::Nodes::NamedFunction.new(
           "earth_box",
           [Utils.ll_to_earth_coords(lat, lng), Utils.quote_value(radius)]
@@ -39,7 +39,7 @@ module ActiveRecordPostgresEarthdistance
       end
 
       def within_radius(radius, lat, lng)
-        radius = radius.try(:*, MILES_TO_METERS_FACTOR) if distance_unit === :miles
+        radius = radius.to_f * MILES_TO_METERS_FACTOR if distance_unit === :miles
         earth_distance = Utils.earth_distance(through_table_klass, lat, lng)
         within_box(radius, lat, lng)
           .where(Arel::Nodes::InfixOperation.new("<=", earth_distance, Utils.quote_value(radius)))
