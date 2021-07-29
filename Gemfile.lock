@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    activerecord-postgres-earthdistance (0.7.1)
+    activerecord-postgres-earthdistance (0.7.2)
       activerecord (>= 3.1)
       pg
       rake
@@ -9,31 +9,30 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
-    activemodel (5.2.1.1)
-      activesupport (= 5.2.1.1)
-    activerecord (5.2.1.1)
-      activemodel (= 5.2.1.1)
-      activesupport (= 5.2.1.1)
-      arel (>= 9.0)
-    activesupport (5.2.1.1)
+    activemodel (6.1.4)
+      activesupport (= 6.1.4)
+    activerecord (6.1.4)
+      activemodel (= 6.1.4)
+      activesupport (= 6.1.4)
+    activesupport (6.1.4)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-      i18n (>= 0.7, < 2)
-      minitest (~> 5.1)
-      tzinfo (~> 1.1)
-    arel (9.0.0)
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      tzinfo (~> 2.0)
+      zeitwerk (~> 2.3)
     coderay (1.1.1)
-    concurrent-ruby (1.1.3)
+    concurrent-ruby (1.1.9)
     diff-lcs (1.3)
-    i18n (1.1.1)
+    i18n (1.8.10)
       concurrent-ruby (~> 1.0)
     method_source (0.8.2)
-    minitest (5.11.3)
-    pg (1.1.3)
+    minitest (5.14.4)
+    pg (1.2.3)
     pry (0.10.4)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    rake (12.3.1)
+    rake (13.0.6)
     rdoc (5.1.0)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
@@ -49,9 +48,9 @@ GEM
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
     slop (3.6.0)
-    thread_safe (0.3.6)
-    tzinfo (1.2.5)
-      thread_safe (~> 0.1)
+    tzinfo (2.0.4)
+      concurrent-ruby (~> 1.0)
+    zeitwerk (2.4.2)
 
 PLATFORMS
   ruby
