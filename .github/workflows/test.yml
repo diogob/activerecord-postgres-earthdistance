@@ -1,0 +1,115 @@
+name: Test
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        gemfile: [
+          activerecord-4.2,
+          activerecord-5.0,
+          activerecord-5.1,
+          activerecord-5.2,
+          activerecord-6.0,
+          activerecord-6.1,
+          activerecord-7.0,
+        ]
+        ruby-version: [
+          '2.4',
+          '2.5',
+          '2.6',
+          '2.7',
+          '3.0',
+          '3.1',
+        ]
+        exclude:
+          - gemfile: activerecord-4.2
+            ruby-version: '2.5'
+          - gemfile: activerecord-4.2
+            ruby-version: '2.6'
+          - gemfile: activerecord-4.2
+            ruby-version: '2.7'
+          - gemfile: activerecord-4.2
+            ruby-version: '3.0'
+          - gemfile: activerecord-4.2
+            ruby-version: '3.1'
+
+          - gemfile: activerecord-5.0
+            ruby-version: '2.5'
+          - gemfile: activerecord-5.0
+            ruby-version: '2.6'
+          - gemfile: activerecord-5.0
+            ruby-version: '2.7'
+          - gemfile: activerecord-5.0
+            ruby-version: '3.0'
+          - gemfile: activerecord-5.0
+            ruby-version: '3.1'
+
+          - gemfile: activerecord-5.1
+            ruby-version: '2.6'
+          - gemfile: activerecord-5.1
+            ruby-version: '2.7'
+          - gemfile: activerecord-5.1
+            ruby-version: '3.0'
+          - gemfile: activerecord-5.1
+            ruby-version: '3.1'
+
+          - gemfile: activerecord-5.2
+            ruby-version: '2.6'
+          - gemfile: activerecord-5.2
+            ruby-version: '2.7'
+          - gemfile: activerecord-5.2
+            ruby-version: '3.0'
+          - gemfile: activerecord-5.2
+            ruby-version: '3.1'
+
+          - gemfile: activerecord-6.0
+            ruby-version: '2.4'
+          - gemfile: activerecord-6.0
+            ruby-version: '2.7'
+          - gemfile: activerecord-6.0
+            ruby-version: '3.0'
+          - gemfile: activerecord-6.0
+            ruby-version: '3.1'
+
+          - gemfile: activerecord-6.1
+            ruby-version: '2.4'
+
+          - gemfile: activerecord-7.0
+            ruby-version: '2.4'
+          - gemfile: activerecord-7.0
+            ruby-version: '2.5'
+          - gemfile: activerecord-7.0
+            ruby-version: '2.6'
+
+    services:
+      postgres:
+        image: postgres:11
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}.gemfile
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby-version }}
+        bundler-cache: true
+    - name: Run tests
+      run: bundle exec rake
