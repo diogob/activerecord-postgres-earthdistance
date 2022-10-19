@@ -47,6 +47,9 @@ module ActiveRecordPostgresEarthdistance
 
       def order_by_distance(lat, lng, order = "ASC")
         earth_distance = Utils.earth_distance(through_table_klass, lat, lng)
+        earth_distance = Arel::Nodes::Multiplication.new(
+          Utils.quote_value(1 / MILES_TO_METERS_FACTOR), earth_distance
+        ) if distance_unit === :miles
         joins(through_table).order(Arel.sql("#{earth_distance.to_sql} #{order}"))
       end
 
