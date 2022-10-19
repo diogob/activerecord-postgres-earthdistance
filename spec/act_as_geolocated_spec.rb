@@ -379,6 +379,19 @@ describe "ActiveRecord::Base.act_as_geolocated" do
     context "when selecting distance" do
       let(:current_location) { { lat: 52.229676, lng: 21.012229 } } # Warsaw
       it { is_expected.to eq ["Amsterdam", 680.410076641856] }
+
+      context "and selecting distinct and ordering by distance" do
+        subject do
+          Place
+            .order_by_distance(current_location[:lat], current_location[:lng])
+            .selecting_distance_from(current_location[:lat], current_location[:lng])
+            .distinct
+            .first
+            .try { |p| [p.data, p.distance.to_f] }
+        end
+
+        it { is_expected.to eq ["Amsterdam", 680.410076641856] }
+      end
     end
 
     context "through table" do
