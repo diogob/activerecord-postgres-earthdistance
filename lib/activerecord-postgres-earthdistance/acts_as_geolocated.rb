@@ -2,9 +2,9 @@ module ActiveRecordPostgresEarthdistance
   MILES_TO_METERS_FACTOR = 1609.344
   module ActsAsGeolocated
     extend ActiveSupport::Concern
-    
 
-    module ClassMethods  
+
+    module ClassMethods
       def acts_as_geolocated(options = {})
         begin
           if table_exists?
@@ -95,7 +95,7 @@ module ActiveRecordPostgresEarthdistance
   module QueryMethods
     def selecting_distance_from(lat, lng, name = "distance", include_default_columns = true)
       clone.tap do |relation|
-        relation.joins!(through_table)
+        relation.joins!(through_table) if through_table
         values = []
         if relation.select_values.empty? && include_default_columns
           values << relation.arel_table[Arel.star]
