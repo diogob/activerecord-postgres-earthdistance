@@ -107,7 +107,7 @@ module ActiveRecordPostgresEarthdistance
 
         values << distances
 
-        relation.select_values = values
+        relation.select_values |= values
       end
     end
   end

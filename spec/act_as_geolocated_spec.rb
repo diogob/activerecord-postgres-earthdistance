@@ -78,13 +78,13 @@ describe "ActiveRecord::Base.act_as_geolocated" do
 
     subject { Place.within_box(test_data[:radius], test_data[:lat], test_data[:lng]) }
 
-    before(:all) { 
+    before(:all) {
       Place.acts_as_geolocated distance_unit: :miles
-      @place = Place.create!(lat: -30.0277041, lng: -51.2287346) 
+      @place = Place.create!(lat: -30.0277041, lng: -51.2287346)
     }
-    after(:all) { 
+    after(:all) {
       Place.acts_as_geolocated
-      @place.destroy 
+      @place.destroy
     }
 
     context "when query with null data" do
@@ -93,7 +93,7 @@ describe "ActiveRecord::Base.act_as_geolocated" do
 
     context "when query for the exact same point with radius 0" do
       let(:test_data) { { lat: -30.0277041, lng: -51.2287346, radius: 0 } }
-      
+
       it { is_expected.to eq [@place] }
     end
 
@@ -354,6 +354,15 @@ describe "ActiveRecord::Base.act_as_geolocated" do
       end
 
       context "when selecting distance" do
+        it { is_expected.to respond_to :distance }
+      end
+    end
+
+    context "with explicit columns selected" do
+      subject { Place.select('data AS special_data').selecting_distance_from(current_location[:lat], current_location[:lng]).first }
+
+      context "when selecting distance" do
+        it { is_expected.to respond_to :special_data }
         it { is_expected.to respond_to :distance }
       end
     end
