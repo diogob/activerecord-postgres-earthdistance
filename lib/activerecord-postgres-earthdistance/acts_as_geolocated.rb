@@ -18,6 +18,7 @@ module ActiveRecordPostgresEarthdistance
             puts "[WARNING] table #{table_name} doesn't exist, acts_as_geolocated won't work. Skip this warning if you are running db migration"
           end
         rescue ActiveRecord::NoDatabaseError
+        rescue ActiveRecord::ConnectionNotEstablished
         rescue PG::ConnectionBad
         end
       end
